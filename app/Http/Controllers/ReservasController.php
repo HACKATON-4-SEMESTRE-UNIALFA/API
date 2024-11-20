@@ -141,9 +141,16 @@ class ReservasController extends Controller
             ], 404);
         }
 
+        /**
+         * Sempre quando for atualizar alguma info na reserva
+         * salvar os dados atuais da reserva no historico atraves
+         * do metodo static store do historico
+         */
+        $reservaAtual = Reservas::find($id);
+        $historicoReserva = HistoricoReservaController::store($reservaAtual, $id);
+        
 
-        $reserva = Reservas::find($id);
-        $reserva->update([
+        $reservaAtual->update([
             'id_usuario' => $request->id_usuario,
             'id_ambiente' => $request->id_ambiente,
             'horario' => $request->horario,
@@ -153,7 +160,8 @@ class ReservasController extends Controller
         return response()->json([
             'error' => false,
             'message' => 'Reserva editada com sucesso!',
-            'reserva' => $reserva
+            'reservaAtual' => $reservaAtual,
+            'Atualizacao do Historico' => $historicoReserva,
         ], 201);
     }
 
@@ -253,10 +261,10 @@ class ReservasController extends Controller
             ->pluck('horario')
             ->toArray();
 
-        $horariosDisponiveis = $horarioFuncionamento->filter(function ($horarioFunciona) use ($reservas){
+        $horariosDisponiveis = $horarioFuncionamento->filter(function ($horarioFunciona) use ($reservas) {
             return !in_array($horarioFunciona->horario, $reservas);
         });
-        
+
 
         return response()->json([
             'error' => false,

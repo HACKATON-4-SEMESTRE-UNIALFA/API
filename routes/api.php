@@ -4,6 +4,7 @@ use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AmbienteController;
+use App\Http\Controllers\HistoricoReservaController;
 use App\Http\Controllers\HorarioFuncionamentoController;
 use App\Http\Controllers\ReservasController;
 
@@ -48,4 +49,9 @@ Route::get('/reservas/{id}', [ReservasController::class, 'show']); // Mostrar um
 Route::get('/verificaReserva', [ReservasController::class, 'verificaReserva']); // Mostrar um reserva específico
 Route::post('/reservas', [ReservasController::class, 'store']); // Criar um novo reserva
 Route::put('/reservas/{id}', [ReservasController::class, 'update']); // Atualizar um reserva existente
+
+
+//Historico de Reservas
+Route::get('/reserva/historico', [HistoricoReservaController::class, 'index']); // Listar todos os reservas
+Route::get('/reserva/historico/{id}', [HistoricoReservaController::class, 'show']); // Mostrar um reserva específico
 
