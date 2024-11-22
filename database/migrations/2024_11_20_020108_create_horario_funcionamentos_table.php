@@ -14,10 +14,7 @@ return new class extends Migration
         Schema::create('horario_funcionamentos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_ambiente')->constrained('ambientes')->onDelete('cascade');
-
-            $table->string('dia');
             $table->string('horario');
-
             $table->timestamps();
         });
     }

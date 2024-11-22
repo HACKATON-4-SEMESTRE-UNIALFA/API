@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ambiente;
+use App\Models\HistoricoReserva;
 use App\Models\HorarioFuncionamento;
 use App\Models\Reservas;
 use App\Models\Usuario;
@@ -28,7 +29,7 @@ class ReservasController extends Controller
         return response()->json([
             'error' => false,
             'message' => 'Reservas listadas com sucesso',
-            'reservas' => $reserva
+            'reserva' => $reserva
         ], 200);
     }
 
@@ -69,6 +70,13 @@ class ReservasController extends Controller
             ], 404);
         }
 
+        $historico = HistoricoReserva::create([
+            'id_usuario' => $request->input('id_usuario'),
+            'id_ambiente' => $request->input('id_ambiente'),
+            'horario' => $request->input('horario'),
+            'dia' => $request->input('dia'),
+        ]);
+
         $reserva = Reservas::create([
             'id_usuario' => $request->input('id_usuario'),
             'id_ambiente' => $request->input('id_ambiente'),
@@ -79,7 +87,8 @@ class ReservasController extends Controller
         return response()->json([
             'error' => false,
             'message' => 'Reserva cadastrada com sucesso!',
-            'reserva' => $reserva
+            'reserva' => $reserva,
+            'historico' => $historico,
         ], 201);
     }
 
@@ -161,7 +170,7 @@ class ReservasController extends Controller
             'error' => false,
             'message' => 'Reserva editada com sucesso!',
             'reservaAtual' => $reservaAtual,
-            'Atualizacao do Historico' => $historicoReserva,
+            'historico' => $historicoReserva,
         ], 201);
     }
 
@@ -269,7 +278,7 @@ class ReservasController extends Controller
         return response()->json([
             'error' => false,
             'message' => 'Horarios disponiveis',
-            'horarios' => $horariosDisponiveis->values()
+            'horario' => $horariosDisponiveis->values()
         ], 200);
     }
 }

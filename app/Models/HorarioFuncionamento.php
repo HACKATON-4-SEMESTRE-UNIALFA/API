@@ -12,7 +12,6 @@ class HorarioFuncionamento extends Model
 
     protected $fillable = [
         'id_ambiente',
-        'dia',
         'horario',
     ];
 

@@ -23,7 +23,8 @@ class HorarioFuncionamentoController extends Controller
 
         return response()->json([
             'error' => false,
-            'message' => $horarioFuncionamento
+            'message' => 'Horarios Listados',
+            'horarios' => $horarioFuncionamento
         ], 200);
     }
 

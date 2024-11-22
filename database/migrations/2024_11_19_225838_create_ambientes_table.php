@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('ambientes', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->string('descricao');
+            $table->string('capacidade');
+            $table->string('status');
+            $table->string('equipamentos_disponiveis');
+            $table->string('imagem')->nullable();
             $table->timestamps();
         });
     }

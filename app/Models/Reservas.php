@@ -14,8 +14,8 @@ class Reservas extends Model
         'id_usuario',
         'id_ambiente',
         'horario',
-        'dia',
-        'statusReserva',
+        'data',
+        'status',
     ];
 
     public function ambiente()

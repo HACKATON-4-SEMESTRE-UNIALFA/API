@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('id_usuario')->constrained('usuarios')->onDelete('cascade');
             $table->foreignId('id_ambiente')->constrained('ambientes')->onDelete('cascade');
             $table->string('horario');
-            $table->string('dia');
-            $table->boolean('statusReserva')->default(true);
+            $table->string('data');
+            $table->string('status');
             $table->timestamps();
         });
     }
