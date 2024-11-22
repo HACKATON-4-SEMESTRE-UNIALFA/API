@@ -23,14 +23,14 @@ class AmbienteController extends Controller
 
         return response()->json([
             'error' => false,
-            'Dados dos Ambientes' => [$ambiente]
+            'ambiente' => $ambiente
         ], 200);
     }
 
     /**
      * Cria um novo ambiente
      */
-    public function store(Request $request)
+    public function store(Request $request)//Adicionar parametro de imagem
     {
         $validator = Validator::make(
             $request->all(),
@@ -92,7 +92,7 @@ class AmbienteController extends Controller
     /**
      * Edita o ambiente por id
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id)//Adicionar parametro de imagem
     {
         $validator = Validator::make(
             $request->all(),
@@ -155,7 +155,7 @@ class AmbienteController extends Controller
         return response()->json([
             'error' => false,
             'message' => 'Ambiente nao encontrado',
-            'Dados deletados' => [$ambiente]
+            'ambiente' => $ambiente
         ], 200);
     }
 

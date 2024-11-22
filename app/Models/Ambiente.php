@@ -11,7 +11,10 @@ class Ambiente extends Model
 
     protected $fillable = [
         'nome',
-        'descricao',
+        'capacidade',
+        'status',
+        'equipamentos_disponiveis',
+        'imagem',
     ];
 
     public function horarios()
