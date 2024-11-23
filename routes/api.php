@@ -11,15 +11,6 @@ use App\Http\Controllers\ReservasController;
 //Login de Usuarios
 Route::post('/login', [UsuarioController::class, 'login']); //Realiza o login e gera o token de usuarios cadastrados
 
-//Administradores
-Route::get('/admins', [AdminController::class, 'index']); //Listar admins
-Route::get('/admins/{id}', [AdminController::class, 'show']); //Mostar Admin por id
-Route::post('/admins', [AdminController::class, 'store']); //Criar admins
-Route::put('/admin/desabilita/{id}', [AdminController::class, 'desabilita']);//Desabilita usuario por id
-Route::put('/admin/habilita/{id}', [AdminController::class, 'habilita']);//Desabilita usuario por id
-Route::put('/admins/{id}', [AdminController::class, 'update']);//Edita usuario por id
-Route::delete('/admins/{id}', [AdminController::class, 'destroy']);//Deleta usuario por id
-
 //Ambientes
 Route::get('/ambientes', [AmbienteController::class, 'index']);// Listas Ambientes
 Route::get('/ambientes/{id}', [AmbienteController::class, 'show']);// Lista Ambiente por ID

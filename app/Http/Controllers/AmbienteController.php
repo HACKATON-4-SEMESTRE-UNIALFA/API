@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use App\Models\Ambiente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -82,10 +83,9 @@ class AmbienteController extends Controller
                 return response()->json([
                     'error' => false,
                     'message' => 'Ambiente cadastrado com sucesso!',
-                    
+
                     'ambiente' => $ambiente,
-                 ], 201);
-            
+                ], 201);
             } catch (\Exception $e) {
                 return response()->json([
                     'mensagem' => 'Erro ao salvar no banco de dados',
@@ -123,52 +123,89 @@ class AmbienteController extends Controller
     /**
      * Edita o ambiente por id
      */
-    public function update(Request $request, $id) //Adicionar parametro de imagem
+    public function update(Request $request, $id)
     {
+        // Encontre o ambiente pelo ID
+        $ambiente = Ambiente::find($id);
+
+        if (!$ambiente) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Ambiente não encontrado'
+            ], 404);
+        }
+
+        // Validação dos dados recebidos
         $validator = Validator::make(
             $request->all(),
             [
                 'nome' => 'required|string',
-                'descricao' => 'required|string'
+                'capacidade' => 'required|string',
+                'status' => 'required|string',
+                'equipamentos_disponiveis' => 'required|string',
+                'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480', // Imagem opcional
             ],
             [
-                'required' => 'O campo :attribute e obrigatorio!',
-                'string' => 'O campo :attribute e string!',
+                'required' => 'O campo :attribute é obrigatório!',
+                'string' => 'O campo :attribute deve ser uma string!',
             ],
             [
                 'nome' => 'Nome',
-                'descricao' => 'Descricao',
-            ],
-            422
+                'capacidade' => 'Capacidade',
+                'status' => 'Status',
+                'equipamentos_disponiveis' => 'Equipamentos Disponíveis',
+                'imagem' => 'Imagem',
+            ]
         );
 
+        // Se houver erros de validação
         if ($validator->fails()) {
             return response()->json([
                 'error' => true,
-                'message' => 'Erro na validacao dos dados',
-                'error' => $validator->error()
+                'message' => 'Erro na validação dos dados',
+                'errors' => $validator->errors()
             ], 422);
         }
 
-        $ambiente = Ambiente::find($id);
-        if (!$ambiente) {
+        try {
+            // Atualiza os dados do ambiente
+            $ambiente->nome = $request->input('nome');
+            $ambiente->capacidade = $request->input('capacidade');
+            $ambiente->status = $request->input('status');
+            $ambiente->equipamentos_disponiveis = $request->input('equipamentos_disponiveis');
+
+            // Se uma nova imagem for enviada
+            if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
+                // Deleta a imagem antiga, se existir
+                if ($ambiente->imagem) {
+                    Storage::disk('public')->delete('imagens/' . $ambiente->imagem);
+                }
+
+                // Armazena a nova imagem
+                $path = $request->file('imagem')->store('imagens', 'public');
+                $nomeArquivo = basename($path);
+
+                // Atualiza o campo de imagem
+                $ambiente->imagem = $nomeArquivo;
+            }
+
+            // Salva as alterações no banco de dados
+            $ambiente->save();
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Ambiente atualizado com sucesso!',
+                'ambiente' => $ambiente,
+            ], 200);
+        } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
-                'message' => 'Ambiente nao encontrado',
-            ], 404);
+                'message' => 'Erro ao atualizar o ambiente',
+                'erro' => $e->getMessage()
+            ], 500);
         }
-
-        $ambiente->update([
-            'nome' => $request->nome,
-            'descricao' => $request->descricao,
-        ]);
-
-        return response()->json([
-            'error' => false,
-            'message' => 'Ambiente editado com sucesso!',
-            'ambiente' => $ambiente
-        ], 200);
     }
+
 
     /**
      * Deleta usuario por id
