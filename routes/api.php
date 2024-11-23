@@ -39,7 +39,7 @@ Route::get('/reservas', [ReservasController::class, 'index']); // Listar todos o
 Route::delete('/reservas/{id}', [ReservasController::class, 'destroy']); // Deletar um reserva
 Route::put('/reservas/desabilita/{id}', [ReservasController::class, 'desabilita']); // Desabilita um reserva
 Route::get('/reservas/{id}', [ReservasController::class, 'show']); // Mostrar um reserva específico
-Route::get('/verificaReserva', [ReservasController::class, 'verificaReserva']); // Mostrar um reserva específico
+Route::get('/verificaReserva/{id}', [ReservasController::class, 'verificaReserva']); // Mostrar um reserva específico
 Route::post('/reservas', [ReservasController::class, 'store']); // Criar um novo reserva
 Route::put('/reservas/{id}', [ReservasController::class, 'update']); // Atualizar um reserva existente
 

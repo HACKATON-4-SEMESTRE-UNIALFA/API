@@ -15,9 +15,6 @@ class HorarioFuncionamentoController extends Controller
     {
         $horarioFuncionamento = HorarioFuncionamento::all();
 
-        $idAmbiente = $horarioFuncionamento->id_ambiente;
-
-        
         if (!$horarioFuncionamento) {
             return response()->json([
                 'error' => true,

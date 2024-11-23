@@ -240,33 +240,10 @@ class ReservasController extends Controller
     /**
      * 
      */
-    public function verificaReserva(Request $request)
+    public function verificaReserva($id)
     {
-
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'id_ambiente' => 'required|exists:ambientes,id',
-            ],
-            [
-                'required' => 'O campo :attribute e obrigatorio',
-                'id_ambientes.exists' => 'O :attribute informado nao existe na tabela ambientes',
-            ],
-            [
-                'id_ambiente' => 'Id Ambiente',
-            ],
-            422
-        );
-
-
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => true,
-                'message' => 'Erro na validacao dos dados',
-            ], 404);
-        }
-
-        $ambiente = Ambiente::find($request->id_ambiente);
+        $idInt = (int)$id;
+        $ambiente = Ambiente::find($idInt);
 
         if (!$ambiente) {
             return response()->json([
@@ -276,16 +253,16 @@ class ReservasController extends Controller
         }
 
         //Busca o horario disponivel daquele ambiente
-        $horarioFuncionamento = HorarioFuncionamento::where('id_ambiente', $request->id_ambiente)->get();
+        $horarioFuncionamento = HorarioFuncionamento::where('id_ambiente', $idInt)->get();
 
         // Busca todas as reservas ativas no id do ambiente
-        $reservas = Reservas::where('statusReserva', 1)
-            ->where('id_ambiente', $request->id_ambiente)
+        $reservas = Reservas::where('status', 1)
+            ->where('id_ambiente', $idInt)
             ->pluck('horario')
             ->toArray();
 
-        $horariosDisponiveis = $horarioFuncionamento->filter(function ($horarioFunciona) use ($reservas) {
-            return !in_array($horarioFunciona->horario, $reservas);
+        $horariosDisponiveis = $horarioFuncionamento->filter(function ($horarioF) use ($reservas) {
+            return !in_array($horarioF->horario, $reservas);
         });
 
 
