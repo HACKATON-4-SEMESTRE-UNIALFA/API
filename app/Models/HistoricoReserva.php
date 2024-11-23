@@ -14,7 +14,7 @@ class HistoricoReserva extends Model
         'id_reserva',
         'id_usuario',
         'id_ambiente',
-        'id_aletacao',
+        'id_alteracao',
         'horario',
         'data',
         'status',

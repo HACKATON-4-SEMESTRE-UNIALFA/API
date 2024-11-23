@@ -72,17 +72,6 @@ class ReservasController extends Controller
             ], 404);
         }
 
-
-        $historicoOk = HistoricoReserva::create([
-            'id_usuario' => $request->input('id_usuario'),
-            'id_ambiente' => $request->input('id_ambiente'),
-            'id_reserva' => $request->input('id_reserva'),
-            'id_alteracao' => $request->input('id_alteracao'),
-            'horario' => $request->input('horario'),
-            'data' => $request->input('data'),
-            'status' => $request->input('status')
-        ]);
-
         $reserva = Reservas::create([
             'id_usuario' => $request->input('id_usuario'),
             'id_ambiente' => $request->input('id_ambiente'),
@@ -90,6 +79,17 @@ class ReservasController extends Controller
             'data' => $request->input('data'),
             'status' => $request->input('status')
         ]);
+
+        $historicoOk = HistoricoReserva::create([
+            'id_usuario' => $request->input('id_usuario'),
+            'id_ambiente' => $request->input('id_ambiente'),
+            'id_reserva' => $reserva->id,
+            'id_alteracao' => $request->input('id_alteracao'),
+            'horario' => $request->input('horario'),
+            'data' => $request->input('data'),
+            'status' => $request->input('status')
+        ]);
+
 
         return response()->json([
             'error' => false,
@@ -252,24 +252,35 @@ class ReservasController extends Controller
             ], 404);
         }
 
-        //Busca o horario disponivel daquele ambiente
-        $horarioFuncionamento = HorarioFuncionamento::where('id_ambiente', $idInt)->get();
-
-        // Busca todas as reservas ativas no id do ambiente
-        $reservas = Reservas::where('status', 1)
-            ->where('id_ambiente', $idInt)
+        $horariosFuncionamento = HorarioFuncionamento::where('id_ambiente', $idInt)
             ->pluck('horario')
             ->toArray();
 
-        $horariosDisponiveis = $horarioFuncionamento->filter(function ($horarioF) use ($reservas) {
-            return !in_array($horarioF->horario, $reservas);
-        });
 
+        $reservas = Reservas::where('id_ambiente', $idInt)
+            ->where('status', 'ativo')
+            ->get();
+
+        $reservasPorData = $reservas->groupBy('data');
+
+        $diasCompletos = [];
+        foreach ($reservasPorData as $data => $reservasDoDia) {
+            $horariosReservados = $reservasDoDia->pluck('horario')->toArray();
+            if (empty(array_diff($horariosFuncionamento, $horariosReservados))) {
+                $diasCompletos[] = $data;
+            }
+        }
+
+        if(!$diasCompletos){
+            return response()->json([
+                'Todos os dias estao liberados'
+            ]);
+        }
 
         return response()->json([
-            'error' => false,
-            'message' => 'Horarios disponiveis',
-            'horario' => $horariosDisponiveis->values()
-        ], 200);
+            'idAmbiente' => $ambiente->id,
+            'nomeAmbiente' => $ambiente->nome,
+            'diasOcupados' => $diasCompletos,
+        ]);
     }
 }
