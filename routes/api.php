@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AmbienteController;
 use App\Http\Controllers\HistoricoReservaController;
 use App\Http\Controllers\HorarioFuncionamentoController;
+use App\Http\Controllers\NotificacaoController;
 use App\Http\Controllers\ReservasController;
 
 //Login de Usuarios
@@ -49,4 +50,8 @@ Route::put('/reservas/{id}', [ReservasController::class, 'update']); // Atualiza
 //Historico de Reservas
 Route::get('/reserva/historico', [HistoricoReservaController::class, 'index']); // Listar todos os reservas
 Route::get('/reserva/historico/{id}', [HistoricoReservaController::class, 'show']); // Mostrar um reserva específico
+
+//Notificacao
+Route::get('/reserva/notificacao', [NotificacaoController::class, 'index']); // Listar todas as notificacoes
+Route::get('/reserva/notificacao/{id}', [NotificacaoController::class, 'show']); // Mostrar uma notificacao especifica
 

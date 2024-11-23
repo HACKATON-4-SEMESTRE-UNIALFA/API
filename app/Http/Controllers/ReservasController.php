@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ambiente;
 use App\Models\HistoricoReserva;
 use App\Models\HorarioFuncionamento;
+use App\Models\Notificacao;
 use App\Models\Reservas;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
@@ -45,7 +46,6 @@ class ReservasController extends Controller
                 'id_ambiente' => 'required|exists:ambientes,id',
                 'horario' => 'required|string',
                 'data' => 'required|date_format:Y-m-d',
-                'status' => 'required|in:ativo,inativo,cancelado'
             ],
             [
                 'required' => 'O campo :attribute e obrigatorio',
@@ -59,7 +59,6 @@ class ReservasController extends Controller
                 'id_usuario' => 'Id Usuario',
                 'data' => 'data',
                 'horario' => 'Horario',
-                'status' => 'status'
             ],
             422
         );
@@ -77,9 +76,10 @@ class ReservasController extends Controller
             'id_ambiente' => $request->input('id_ambiente'),
             'horario' => $request->input('horario'),
             'data' => $request->input('data'),
-            'status' => $request->input('status')
+            'status' => 'ativo'
         ]);
 
+        
         $historicoOk = HistoricoReserva::create([
             'id_usuario' => $request->input('id_usuario'),
             'id_ambiente' => $request->input('id_ambiente'),
@@ -87,10 +87,10 @@ class ReservasController extends Controller
             'id_alteracao' => $request->input('id_alteracao'),
             'horario' => $request->input('horario'),
             'data' => $request->input('data'),
-            'status' => $request->input('status')
+            'status' => 'ativo'
         ]);
-
-
+        
+        
         return response()->json([
             'error' => false,
             'message' => 'Reserva cadastrada com sucesso!',
@@ -98,33 +98,34 @@ class ReservasController extends Controller
             'historico' => $historicoOk,
         ], 201);
     }
-
+    
     /**
      * Display the specified resource.
      */
     public function show($id)
     {
         $reserva = Reservas::find($id);
-
+        
         if (!$reserva) {
             return response()->json([
                 'error' => true,
                 'message' => 'Nenhum reserva encontrada'
             ], 404);
         }
-
+        
         return response()->json([
             'error' => false,
             'message' => 'Reserva encontrada',
             'reserva' => $reserva
         ], 200);
     }
-
+    
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
     {
+
         $validator = Validator::make(
             $request->all(),
             [
@@ -150,7 +151,7 @@ class ReservasController extends Controller
             ],
             422
         );
-
+        
         if ($validator->fails()) {
             return response()->json([
                 'error' => true,
@@ -158,8 +159,21 @@ class ReservasController extends Controller
                 'errors' => $validator->errors(),
             ], 404);
         }
+        
+        $tipo = $request->tipo ;
+        $mensagem = $request->mensagem; 
 
         $reservaAtual = Reservas::find($id);
+
+        if(!$reservaAtual){
+            return response()->json([
+                'error' => true,
+                'message' => 'Nenhuma reserva encontrada',
+            ]);
+        }
+
+        
+        $notificaAlteracao = NotificacaoController::store($reservaAtual, $request->id_usuario, $tipo, $mensagem);
 
         $historico = HistoricoReserva::create([
             'id_reserva' => $reservaAtual->id,
@@ -185,13 +199,14 @@ class ReservasController extends Controller
             'message' => 'Reserva editada com sucesso!',
             'reserva' => $reservaAtual,
             'historico' => $historico,
+            'notificacao' => $notificaAlteracao,
         ], 201);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function desabilita($id)
+    public function desable($id)
     {
         $reserva = Reservas::find($id);
 
@@ -203,12 +218,12 @@ class ReservasController extends Controller
         }
 
         $reserva->update([
-            'statusReserva' => false,
+            'status' => 'cancelado'
         ]);
 
         return response()->json([
             'error' => false,
-            'message' => 'Reserva desabilitada',
+            'message' => 'Reserva cancelada',
             'reserva' => $reserva
         ], 200);
     }
@@ -216,7 +231,7 @@ class ReservasController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function enable($id)
     {
         $reserva = Reservas::find($id);
 
@@ -227,11 +242,13 @@ class ReservasController extends Controller
             ], 404);
         }
 
-        $reserva->delete($id);
+        $reserva->update([
+            'status' => 'ativo'
+        ]);
 
         return response()->json([
             'error' => false,
-            'message' => 'Reserva deletada',
+            'message' => 'Reserva ativada',
             'reserva' => $reserva
         ], 200);
     }

@@ -51,7 +51,7 @@ class AmbienteController extends Controller
             [
                 'nome' => 'required|string',
                 'capacidade' => 'required|string',
-                'status' => 'required|string',
+                'status' => 'required|in:disponivel,indisponivel,manutencao',
                 'equipamentos_disponiveis' => 'required|string',
                 'imagem' => 'required|image|mimes:jpeg,png,jpg,gif|max:20480',
             ],
@@ -154,7 +154,7 @@ class AmbienteController extends Controller
             [
                 'nome' => 'required|string',
                 'capacidade' => 'required|string',
-                'status' => 'required|string',
+                'status' => 'required|in:disponivel,indisponivel,manutencao',
                 'equipamentos_disponiveis' => 'required|string',
                 'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480', // Imagem opcional
             ],
