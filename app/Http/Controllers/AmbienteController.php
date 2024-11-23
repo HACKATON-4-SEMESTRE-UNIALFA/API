@@ -28,6 +28,19 @@ class AmbienteController extends Controller
         ], 200);
     }
 
+
+    public function showImage($dirname, $filename)
+    {
+
+        $filePath = "{$dirname}/{$filename}";
+
+        if (Storage::disk('public')->exists($filePath)) {
+            return response()->file(Storage::disk('public')->path($filePath));
+        }
+
+        return response()->json(['error' => 'Imagem não encontrada'], 404);
+    }
+
     /**
      * Cria um novo ambiente
      */

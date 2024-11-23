@@ -11,7 +11,9 @@ use App\Http\Controllers\ReservasController;
 //Login de Usuarios
 Route::post('/login', [UsuarioController::class, 'login']); //Realiza o login e gera o token de usuarios cadastrados
 
+
 //Ambientes
+Route::get('/imagens', [AmbienteController::class, 'showImage']);
 Route::get('/ambientes', [AmbienteController::class, 'index']);// Listas Ambientes
 Route::get('/ambientes/{id}', [AmbienteController::class, 'show']);// Lista Ambiente por ID
 Route::post('/ambientes', [AmbienteController::class, 'store']);//Cadastra novos ambientes

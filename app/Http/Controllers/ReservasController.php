@@ -76,6 +76,8 @@ class ReservasController extends Controller
         $historicoOk = HistoricoReserva::create([
             'id_usuario' => $request->input('id_usuario'),
             'id_ambiente' => $request->input('id_ambiente'),
+            'id_reserva' => $request->input('id_reserva'),
+            'id_alteracao' => $request->input('id_alteracao'),
             'horario' => $request->input('horario'),
             'data' => $request->input('data'),
             'status' => $request->input('status')
