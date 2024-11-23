@@ -44,7 +44,8 @@ class ReservasController extends Controller
                 'id_usuario' => 'required|exists:usuarios,id',
                 'id_ambiente' => 'required|exists:ambientes,id',
                 'horario' => 'required|string',
-                'dia' => 'required|date_format:Y-m-d',
+                'data' => 'required|date_format:Y-m-d',
+                'status' => 'required|in:ativo,inativo,cancelado'
             ],
             [
                 'required' => 'O campo :attribute e obrigatorio',
@@ -56,8 +57,9 @@ class ReservasController extends Controller
             [
                 'id_ambiente' => 'Id Ambiente',
                 'id_usuario' => 'Id Usuario',
-                'dia' => 'Dia',
+                'data' => 'data',
                 'horario' => 'Horario',
+                'status' => 'status'
             ],
             422
         );
@@ -70,25 +72,30 @@ class ReservasController extends Controller
             ], 404);
         }
 
-        $historico = HistoricoReserva::create([
+
+        $historicoOk = HistoricoReserva::create([
             'id_usuario' => $request->input('id_usuario'),
             'id_ambiente' => $request->input('id_ambiente'),
+            'id_reserva' => $request->input('id_reserva'),
+            'id_alteracao' => $request->input('id_alteracao'),
             'horario' => $request->input('horario'),
-            'dia' => $request->input('dia'),
+            'data' => $request->input('data'),
+            'status' => $request->input('status')
         ]);
 
         $reserva = Reservas::create([
             'id_usuario' => $request->input('id_usuario'),
             'id_ambiente' => $request->input('id_ambiente'),
             'horario' => $request->input('horario'),
-            'dia' => $request->input('dia'),
+            'data' => $request->input('data'),
+            'status' => $request->input('status')
         ]);
 
         return response()->json([
             'error' => false,
             'message' => 'Reserva cadastrada com sucesso!',
             'reserva' => $reserva,
-            'historico' => $historico,
+            'historico' => $historicoOk,
         ], 201);
     }
 
@@ -124,7 +131,8 @@ class ReservasController extends Controller
                 'id_usuario' => 'required|exists:usuarios,id',
                 'id_ambiente' => 'required|exists:ambientes,id',
                 'horario' => 'required|string',
-                'dia' => 'required|date_format:Y-m-d',
+                'data' => 'required|date_format:Y-m-d',
+                'status' => 'required|in:ativo,inativo,cancelado'
             ],
             [
                 'required' => 'O campo :attribute e obrigatorio',
@@ -136,8 +144,9 @@ class ReservasController extends Controller
             [
                 'id_ambiente' => 'Id Ambiente',
                 'id_usuario' => 'Id Usuario',
-                'dia' => 'Dia',
+                'data' => 'data',
                 'horario' => 'Horario',
+                'status' => 'status'
             ],
             422
         );
@@ -150,27 +159,32 @@ class ReservasController extends Controller
             ], 404);
         }
 
-        /**
-         * Sempre quando for atualizar alguma info na reserva
-         * salvar os dados atuais da reserva no historico atraves
-         * do metodo static store do historico
-         */
         $reservaAtual = Reservas::find($id);
-        $historicoReserva = HistoricoReservaController::store($reservaAtual, $id);
-        
+
+        $historico = HistoricoReserva::create([
+            'id_reserva' => $reservaAtual->id,
+            'id_alteracao' => $request->id_alteracao,
+            'id_usuario' => $request->input('id_usuario'),
+            'id_ambiente' => $request->input('id_ambiente'),
+            'horario' => $request->input('horario'),
+            'data' => $request->input('data'),
+            'status' => $request->input('status')
+        ]);
+
 
         $reservaAtual->update([
             'id_usuario' => $request->id_usuario,
             'id_ambiente' => $request->id_ambiente,
             'horario' => $request->horario,
-            'dia' => $request->dia,
+            'data' => $request->data,
+            'status' => $request->status
         ]);
 
         return response()->json([
             'error' => false,
             'message' => 'Reserva editada com sucesso!',
-            'reservaAtual' => $reservaAtual,
-            'historico' => $historicoReserva,
+            'reserva' => $reservaAtual,
+            'historico' => $historico,
         ], 201);
     }
 

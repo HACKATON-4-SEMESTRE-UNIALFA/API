@@ -11,8 +11,10 @@ class HistoricoReserva extends Model
 
 
     protected $fillable = [
+        'id_reserva',
         'id_usuario',
         'id_ambiente',
+        'id_aletacao',
         'horario',
         'data',
         'status',
@@ -27,5 +29,10 @@ class HistoricoReserva extends Model
     public function ambiente()
     {
         return $this->belongsTo(Ambiente::class);
+    }
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class);
     }
 }
