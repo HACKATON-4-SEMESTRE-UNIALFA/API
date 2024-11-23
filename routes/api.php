@@ -13,7 +13,7 @@ Route::post('/login', [UsuarioController::class, 'login']); //Realiza o login e 
 
 
 //Ambientes
-Route::get('/imagens', [AmbienteController::class, 'showImage']);
+Route::get('/imagens', [AmbienteController::class, 'showImage']);//Retorna um file da imagem
 Route::get('/ambientes', [AmbienteController::class, 'index']);// Listas Ambientes
 Route::get('/ambientes/{id}', [AmbienteController::class, 'show']);// Lista Ambiente por ID
 Route::post('/ambientes', [AmbienteController::class, 'store']);//Cadastra novos ambientes
@@ -39,9 +39,11 @@ Route::get('/reservas', [ReservasController::class, 'index']); // Listar todos o
 Route::delete('/reservas/{id}', [ReservasController::class, 'destroy']); // Deletar um reserva
 Route::put('/reservas/desabilita/{id}', [ReservasController::class, 'desabilita']); // Desabilita um reserva
 Route::get('/reservas/{id}', [ReservasController::class, 'show']); // Mostrar um reserva específico
-Route::get('/verificaReserva/{id}', [ReservasController::class, 'verificaReserva']); // Mostrar um reserva específico
+Route::get('/verificaReservaDia/{id}', [ReservasController::class, 'verificaReservaDia']); // Retorna os dias que estao com todos os horarios preenchidos
+Route::get('/verificaReservaHorario/{id}/{data}', [ReservasController::class, 'verificaReservaHorario']); // Retorna os horarios preenchidos e um dia
 Route::post('/reservas', [ReservasController::class, 'store']); // Criar um novo reserva
 Route::put('/reservas/{id}', [ReservasController::class, 'update']); // Atualizar um reserva existente
+
 
 
 //Historico de Reservas

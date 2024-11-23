@@ -238,9 +238,9 @@ class ReservasController extends Controller
 
 
     /**
-     * 
+     * Retorna os dias que estao com todos os horarios de funcionamento preenchidos
      */
-    public function verificaReserva($id)
+    public function verificaReservaDia($id)
     {
         $idInt = (int)$id;
         $ambiente = Ambiente::find($idInt);
@@ -271,7 +271,7 @@ class ReservasController extends Controller
             }
         }
 
-        if(!$diasCompletos){
+        if (!$diasCompletos) {
             return response()->json([
                 'Todos os dias estao liberados'
             ]);
@@ -281,6 +281,46 @@ class ReservasController extends Controller
             'idAmbiente' => $ambiente->id,
             'nomeAmbiente' => $ambiente->nome,
             'diasOcupados' => $diasCompletos,
+        ]);
+    }
+
+    /**
+     * Retorna os horarios de funcionamento ocupados de dias parcialmente preenchidos
+     */
+    public function verificaReservaHorario($id, $data)
+    {
+        $idInt = (int)$id;
+        $ambiente = Ambiente::find($idInt);
+
+        if (!$ambiente) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Ambiente não encontrado'
+            ], 404);
+        }
+
+        $horariosFuncionamento = HorarioFuncionamento::where('id_ambiente', $idInt)
+            ->pluck('horario')
+            ->toArray();
+
+        $reservasDoDia = Reservas::where('id_ambiente', $idInt)
+            ->where('status', 'ativo')
+            ->where('data', $data)
+            ->pluck('horario')
+            ->toArray();
+
+        $horariosDisponiveis = array_diff($horariosFuncionamento, $reservasDoDia);
+
+        if (empty($horariosDisponiveis)) {
+            return response()->json([
+                'Todos os horários estão ocupados para esta data'
+            ]);
+        }
+
+        return response()->json([
+            'nomeAmbiente' => $ambiente->nome,
+            'data' => $data,
+            'horariosDisponiveis' => $horariosDisponiveis,
         ]);
     }
 }
