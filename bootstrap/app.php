@@ -13,6 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->statefulApi();
         $middleware->throttleApi();
+
+        $middleware->alias([
+            'auth.jwt' => \App\Http\Middleware\AuthenticateJWT::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -257,6 +257,8 @@ class UsuarioController extends Controller
                 ],
                 'confirmaSenha' => 'nullable|same:password',
                 'telefone' => 'required|string|max:15',
+                'isAdmin' => 'nullable|boolean',
+                'isUser' => 'nullable|boolean',
             ],
             [
                 'required' => 'O campo :attribute é obrigatório',
@@ -297,7 +299,9 @@ class UsuarioController extends Controller
             'nome' => $request->nome,
             'email' => $request->email,
             'password' => $request->password ? bcrypt($request->password) : $usuario->password,
-            'telefone' => $request->telefone
+            'telefone' => $request->telefone,
+            'isAdmin' => $request->isAdmin,
+            'isUser' => $request->isUser
         ]);
 
         return response()->json([
@@ -311,7 +315,7 @@ class UsuarioController extends Controller
     /**
      * Deleta o usuário pelo id
      */
-    public function destroy($id)
+    public function desable($id)
     {
         $usuario = Usuario::find($id);
         if (!$usuario) {
@@ -321,10 +325,13 @@ class UsuarioController extends Controller
             ], 404);
         }
 
-        $usuario->delete();
+        $usuario->update([
+            'isAdmin' => false,
+            'isUser' => false,
+        ]);
         return response()->json([
             'error' => false,
-            'message' => 'Usuario deletado com sucesso',
+            'message' => 'Usuario desabilitado com sucesso',
             'usuario' => $usuario
         ], 200);
     }

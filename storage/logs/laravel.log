@@ -8944,3 +8944,214 @@ Did you mean one of these?
 #61 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\gabri\\\\...')
 #62 {main}
 "} 
+[2024-11-23 22:37:19] local.ERROR: Command "make:providers" is not defined.
+
+Did you mean one of these?
+    make:cache-table
+    make:cast
+    make:channel
+    make:class
+    make:command
+    make:component
+    make:controller
+    make:enum
+    make:event
+    make:exception
+    make:factory
+    make:interface
+    make:job
+    make:job-middleware
+    make:listener
+    make:mail
+    make:middleware
+    make:migration
+    make:model
+    make:notification
+    make:notifications-table
+    make:observer
+    make:policy
+    make:provider
+    make:queue-batches-table
+    make:queue-failed-table
+    make:queue-table
+    make:request
+    make:resource
+    make:rule
+    make:scope
+    make:seeder
+    make:session-table
+    make:test
+    make:trait
+    make:view {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"make:providers\" is not defined.
+
+Did you mean one of these?
+    make:cache-table
+    make:cast
+    make:channel
+    make:class
+    make:command
+    make:component
+    make:controller
+    make:enum
+    make:event
+    make:exception
+    make:factory
+    make:interface
+    make:job
+    make:job-middleware
+    make:listener
+    make:mail
+    make:middleware
+    make:migration
+    make:model
+    make:notification
+    make:notifications-table
+    make:observer
+    make:policy
+    make:provider
+    make:queue-batches-table
+    make:queue-failed-table
+    make:queue-table
+    make:request
+    make:resource
+    make:rule
+    make:scope
+    make:seeder
+    make:session-table
+    make:test
+    make:trait
+    make:view at C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\symfony\\console\\Application.php:702)
+[stacktrace]
+#0 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\symfony\\console\\Application.php(258): Symfony\\Component\\Console\\Application->find('make:providers')
+#1 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\symfony\\console\\Application.php(167): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#2 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(197): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#3 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1205): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#4 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\artisan(13): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
+#5 {main}
+"} 
+[2024-11-23 22:48:36] local.ERROR: Target class [auth.jwt] does not exist. {"exception":"[object] (Illuminate\\Contracts\\Container\\BindingResolutionException(code: 0): Target class [auth.jwt] does not exist. at C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:940)
+[stacktrace]
+#0 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(815): Illuminate\\Container\\Container->build('auth.jwt')
+#1 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1048): Illuminate\\Container\\Container->resolve('auth.jwt', Array, true)
+#2 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(751): Illuminate\\Foundation\\Application->resolve('auth.jwt', Array)
+#3 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1030): Illuminate\\Container\\Container->make('auth.jwt', Array)
+#4 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(172): Illuminate\\Foundation\\Application->make('auth.jwt')
+#5 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(51): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#6 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#7 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\ThrottleRequests.php(161): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#8 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\ThrottleRequests.php(127): Illuminate\\Routing\\Middleware\\ThrottleRequests->handleRequest(Object(Illuminate\\Http\\Request), Object(Closure), Array)
+#9 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\ThrottleRequests.php(89): Illuminate\\Routing\\Middleware\\ThrottleRequests->handleRequestUsingNamedLimiter(Object(Illuminate\\Http\\Request), Object(Closure), 'api', Object(Closure))
+#10 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\ThrottleRequests->handle(Object(Illuminate\\Http\\Request), Object(Closure), 'api')
+#11 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\sanctum\\src\\Http\\Middleware\\EnsureFrontendRequestsAreStateful.php(25): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#12 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->Laravel\\Sanctum\\Http\\Middleware\\{closure}(Object(Illuminate\\Http\\Request))
+#13 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#14 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\sanctum\\src\\Http\\Middleware\\EnsureFrontendRequestsAreStateful.php(24): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#15 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#16 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#17 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(807): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#18 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(786): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#19 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(750): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#20 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(739): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#21 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(201): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#22 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#23 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#25 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#27 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(51): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#28 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#30 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#31 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(110): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#32 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#33 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(62): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#34 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#35 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#36 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#37 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#38 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#39 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#40 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(176): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#41 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(145): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#42 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1190): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#43 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\public\\index.php(17): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\gabri\\\\...')
+#45 {main}
+
+[previous exception] [object] (ReflectionException(code: -1): Class \"auth.jwt\" does not exist at C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:938)
+[stacktrace]
+#0 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(938): ReflectionClass->__construct('auth.jwt')
+#1 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(815): Illuminate\\Container\\Container->build('auth.jwt')
+#2 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1048): Illuminate\\Container\\Container->resolve('auth.jwt', Array, true)
+#3 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(751): Illuminate\\Foundation\\Application->resolve('auth.jwt', Array)
+#4 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1030): Illuminate\\Container\\Container->make('auth.jwt', Array)
+#5 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(172): Illuminate\\Foundation\\Application->make('auth.jwt')
+#6 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\SubstituteBindings.php(51): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#7 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#8 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\ThrottleRequests.php(161): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#9 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\ThrottleRequests.php(127): Illuminate\\Routing\\Middleware\\ThrottleRequests->handleRequest(Object(Illuminate\\Http\\Request), Object(Closure), Array)
+#10 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Middleware\\ThrottleRequests.php(89): Illuminate\\Routing\\Middleware\\ThrottleRequests->handleRequestUsingNamedLimiter(Object(Illuminate\\Http\\Request), Object(Closure), 'api', Object(Closure))
+#11 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Routing\\Middleware\\ThrottleRequests->handle(Object(Illuminate\\Http\\Request), Object(Closure), 'api')
+#12 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\sanctum\\src\\Http\\Middleware\\EnsureFrontendRequestsAreStateful.php(25): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#13 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->Laravel\\Sanctum\\Http\\Middleware\\{closure}(Object(Illuminate\\Http\\Request))
+#14 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#15 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\sanctum\\src\\Http\\Middleware\\EnsureFrontendRequestsAreStateful.php(24): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#16 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Laravel\\Sanctum\\Http\\Middleware\\EnsureFrontendRequestsAreStateful->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#17 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#18 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(807): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#19 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(786): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Illuminate\\Http\\Request))
+#20 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(750): Illuminate\\Routing\\Router->runRoute(Object(Illuminate\\Http\\Request), Object(Illuminate\\Routing\\Route))
+#21 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(739): Illuminate\\Routing\\Router->dispatchToRoute(Object(Illuminate\\Http\\Request))
+#22 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(201): Illuminate\\Routing\\Router->dispatch(Object(Illuminate\\Http\\Request))
+#23 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(144): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}(Object(Illuminate\\Http\\Request))
+#24 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#25 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#26 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#27 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#28 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TrimStrings.php(51): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#29 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#30 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#31 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\ValidatePostSize->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#32 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance.php(110): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#33 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#34 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\HandleCors.php(62): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#35 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\HandleCors->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#36 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Middleware\\TrustProxies.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#37 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Http\\Middleware\\TrustProxies->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#38 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#39 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks->handle(Object(Illuminate\\Http\\Request), Object(Closure))
+#40 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
+#41 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(176): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))
+#42 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(145): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))
+#43 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1190): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
+#44 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\public\\index.php(17): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
+#45 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\gabri\\\\...')
+#46 {main}
+"} 
+[2024-11-23 22:48:37] local.ERROR: Target class [auth.jwt] does not exist. {"exception":"[object] (Illuminate\\Contracts\\Container\\BindingResolutionException(code: 0): Target class [auth.jwt] does not exist. at C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:940)
+[stacktrace]
+#0 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(815): Illuminate\\Container\\Container->build('auth.jwt')
+#1 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1048): Illuminate\\Container\\Container->resolve('auth.jwt', Array, true)
+#2 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(751): Illuminate\\Foundation\\Application->resolve('auth.jwt', Array)
+#3 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1030): Illuminate\\Container\\Container->make('auth.jwt', Array)
+#4 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(258): Illuminate\\Foundation\\Application->make('auth.jwt')
+#5 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(216): Illuminate\\Foundation\\Http\\Kernel->terminateMiddleware(Object(Illuminate\\Http\\Request), Object(Illuminate\\Http\\Response))
+#6 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1192): Illuminate\\Foundation\\Http\\Kernel->terminate(Object(Illuminate\\Http\\Request), Object(Illuminate\\Http\\Response))
+#7 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\public\\index.php(17): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
+#8 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\gabri\\\\...')
+#9 {main}
+
+[previous exception] [object] (ReflectionException(code: -1): Class \"auth.jwt\" does not exist at C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php:938)
+[stacktrace]
+#0 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(938): ReflectionClass->__construct('auth.jwt')
+#1 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(815): Illuminate\\Container\\Container->build('auth.jwt')
+#2 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1048): Illuminate\\Container\\Container->resolve('auth.jwt', Array, true)
+#3 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(751): Illuminate\\Foundation\\Application->resolve('auth.jwt', Array)
+#4 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1030): Illuminate\\Container\\Container->make('auth.jwt', Array)
+#5 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(258): Illuminate\\Foundation\\Application->make('auth.jwt')
+#6 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(216): Illuminate\\Foundation\\Http\\Kernel->terminateMiddleware(Object(Illuminate\\Http\\Request), Object(Illuminate\\Http\\Response))
+#7 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1192): Illuminate\\Foundation\\Http\\Kernel->terminate(Object(Illuminate\\Http\\Request), Object(Illuminate\\Http\\Response))
+#8 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\public\\index.php(17): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
+#9 C:\\Users\\gabri\\Desktop\\4 Semestre\\Aulas\\API\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\gabri\\\\...')
+#10 {main}
+"} 

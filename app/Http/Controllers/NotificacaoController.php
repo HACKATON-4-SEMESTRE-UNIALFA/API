@@ -16,7 +16,7 @@ class NotificacaoController extends Controller
     {
         $notificacao = Notificacao::all();
 
-        if(!$notificacao){
+        if (!$notificacao) {
             return response()->json([
                 'error' => true,
                 'message' => 'Nenhuma notificacao encontrada',
@@ -49,7 +49,7 @@ class NotificacaoController extends Controller
             'infoReserva' => $infoReserva,
             'tipo' => $tipo,
             'mensagem' => $mensagem,
-            'visualizacao' => true,
+            'visualizacao' => false,
         ]);
 
         return response()->json([
@@ -57,31 +57,63 @@ class NotificacaoController extends Controller
             'message' => 'Notificacao criada',
             'notificacao' => $notificacao,
         ], 200);
-
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Notificacao $notificacao)
+    public function show($id)
     {
-        //
-    }
+        $notificacao = Notificacao::find($id);
 
+        if (!$notificacao) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Notificacao nao encontrada'
+            ], 404);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Notificacao $notificacao)
-    {
-        //
+        return response()->json([
+            'error' => false,
+            'message' => 'Notificacao listada',
+            'notificacao' => $notificacao,
+        ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Notificacao $notificacao)
+    public function desable($id)
     {
-        //
+        $usuario = Usuario::find($id);
+
+        if (!$usuario) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Usuário não encontrado'
+            ], 404);
+        }
+
+        $notificacoes = Notificacao::where('id_usuario', $id)
+            ->where('visualizacao', false)
+            ->get();
+
+        if ($notificacoes->isEmpty()) {
+            return response()->json([
+                'error' => false,
+                'message' => 'Nenhuma notificação pendente para este usuário'
+            ], 200);
+        }
+
+        foreach ($notificacoes as $notificacao) {
+            $notificacao->visualizacao = true;
+            $notificacao->save();
+        }
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Todas as notificações foram marcadas como visualizadas',
+            'notificacao' => $notificacoes->count(),
+        ], 200);
     }
 }

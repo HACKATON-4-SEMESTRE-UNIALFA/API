@@ -51,7 +51,6 @@ class AmbienteController extends Controller
             [
                 'nome' => 'required|string',
                 'capacidade' => 'required|string',
-                'status' => 'required|in:disponivel,indisponivel,manutencao',
                 'equipamentos_disponiveis' => 'required|string',
                 'imagem' => 'required|image|mimes:jpeg,png,jpg,gif|max:20480',
             ],
@@ -62,7 +61,6 @@ class AmbienteController extends Controller
             [
                 'nome' => 'Nome',
                 'capacidade' => 'capacidade',
-                'status' => 'status',
                 'equipamentos_disponiveis' => 'equipamentos_disponiveis',
                 'imagem' => 'imagem',
             ],
@@ -88,7 +86,7 @@ class AmbienteController extends Controller
                 $ambiente = Ambiente::create([
                     'nome' => $request->input('nome'),
                     'capacidade' => $request->input('capacidade'),
-                    'status' => $request->input('status'),
+                    'status' => 'disponivel',
                     'equipamentos_disponiveis' => $request->input('equipamentos_disponiveis'),
                     'imagem' =>  $nomeArquivo,
                 ], 201);
@@ -223,7 +221,7 @@ class AmbienteController extends Controller
     /**
      * Deleta usuario por id
      */
-    public function destroy($id)
+    public function desable($id)
     {
         $ambiente = Ambiente::find($id);
         if (!$ambiente) {
@@ -233,7 +231,55 @@ class AmbienteController extends Controller
             ], 404);
         }
 
-        $ambiente->delete();
+        $ambiente->update([
+            'status' => 'indisponivel'
+        ]);
+        return response()->json([
+            'error' => false,
+            'message' => 'Ambiente nao encontrado',
+            'ambiente' => $ambiente
+        ], 200);
+    }
+
+    /**
+     * Deleta usuario por id
+     */
+    public function enable($id)
+    {
+        $ambiente = Ambiente::find($id);
+        if (!$ambiente) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Ambiente nao encontrado!',
+            ], 404);
+        }
+
+        $ambiente->update([
+            'status' => 'disponivel'
+        ]);
+        return response()->json([
+            'error' => false,
+            'message' => 'Ambiente nao encontrado',
+            'ambiente' => $ambiente
+        ], 200);
+    }
+
+    /**
+     * Deleta usuario por id
+     */
+    public function manutencao($id)
+    {
+        $ambiente = Ambiente::find($id);
+        if (!$ambiente) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Ambiente nao encontrado!',
+            ], 404);
+        }
+
+        $ambiente->update([
+            'status' => 'manutencao'
+        ]);
         return response()->json([
             'error' => false,
             'message' => 'Ambiente nao encontrado',
