@@ -224,7 +224,6 @@ class ReservasController extends Controller
         }
 
         //Tratar request
-
         $validator = Validator::make(
             $request->all(),
             [
@@ -249,7 +248,6 @@ class ReservasController extends Controller
         }
 
         $tipo = 'Cancelado';
-
 
         $notificaAlteracao = NotificacaoController::store($reserva, $reserva->id_usuario, $tipo, $request->mensagem);
 

@@ -59,7 +59,7 @@ class AmbienteController extends Controller
             [
                 'required' => 'O campo :attribute e obrigatorio!',
                 'string' => 'O campo :attribute e string!',
-                'in' => 'O campo :attribute precisa ser Disponível,Indisponível ou Manutenção'  
+                'in' => 'O campo :attribute precisa ser Disponível,Indisponível ou Manutenção'
             ],
             [
                 'nome' => 'Nome',
@@ -196,7 +196,7 @@ class AmbienteController extends Controller
 
                 // Atualiza o campo de imagem
                 $ambiente->update([
-                    'imagem' => $nomeArquivo                                  
+                    'imagem' => $nomeArquivo
                 ]);
             }
 
@@ -219,25 +219,23 @@ class AmbienteController extends Controller
 
 
     /**
-     * Lista todos os ambientes disponiveis
+     * Lista todos os ambientes disponíveis
      */
-    public function showEnableAll()
+    public function EnableAll()
     {
-        $ambiente = Ambiente::all()->where('status', 'Disponível');
+        $ambientes = Ambiente::where('status', 'Disponível')->get();
 
-        if (!$ambiente) {
+        if ($ambientes->isEmpty()) {
             return response()->json([
                 'error' => true,
-                'message' => 'Ambiente nao encontrado!',
+                'message' => 'Nenhum ambiente disponível encontrado!',
             ], 404);
         }
 
         return response()->json([
             'error' => false,
-            'message' => 'Ambiente nao encontrado',
-            'ambiente' => $ambiente
+            'message' => 'Ambientes disponíveis encontrados com sucesso!',
+            'ambientes' => $ambientes
         ], 200);
     }
-
-
 }
