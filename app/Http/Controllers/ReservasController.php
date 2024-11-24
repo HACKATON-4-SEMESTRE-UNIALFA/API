@@ -254,15 +254,15 @@ class ReservasController extends Controller
         $historico = HistoricoReserva::create([
             'id_reserva' => $reserva->id,
             'id_alteracao' => $id_alteracao,
-            'id_usuario' => $reserva->input('id_usuario'),
-            'id_ambiente' => $reserva->input('id_ambiente'),
-            'horario' => $reserva->input('horario'),
-            'data' => $reserva->input('data'),
+            'id_usuario' => $reserva->id_usuario,
+            'id_ambiente' => $reserva->id_ambiente,
+            'horario' => $reserva->horario,
+            'data' => $reserva->data,
             'status' => 'cancelado'
         ]);
 
         $reserva->update([
-            'status' => 'cancelado'
+            'status' => 'Cancelado'
         ]);
 
         return response()->json([
