@@ -270,7 +270,6 @@ class ReservasController extends Controller
             'message' => 'Reserva cancelada',
             'reserva' => $reserva,
             'notificacao' => $notificaAlteracao,
-            'reserva' => $reserva,
             'historico' => $historico
         ], 200);
     }
