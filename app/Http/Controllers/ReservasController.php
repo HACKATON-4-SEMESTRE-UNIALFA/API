@@ -158,7 +158,7 @@ class ReservasController extends Controller
         }
 
         $usuarioAlteracao = Usuario::find($request->id_alteracao);
-        if(!$usuarioAlteracao){
+        if (!$usuarioAlteracao) {
             return response()->json([
                 'error' => true,
                 'message' => 'Não foi possivel encontrar usuario que esta solicitando alteração'
@@ -213,15 +213,15 @@ class ReservasController extends Controller
      */
     public function desable(Request $request, $id, $id_alteracao)
     {
-        
-                $reserva = Reservas::find($id);
-        
-                if (!$reserva) {
-                    return response()->json([
-                        'error' => true,
-                        'message' => 'Nenhum reserva encontrada'
-                    ], 404);
-                }
+
+        $reserva = Reservas::find($id);
+
+        if (!$reserva) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Nenhum reserva encontrada'
+            ], 404);
+        }
 
         //Tratar request
 
@@ -263,8 +263,6 @@ class ReservasController extends Controller
             'status' => 'cancelado'
         ]);
 
-
-
         $reserva->update([
             'status' => 'cancelado'
         ]);
@@ -273,8 +271,9 @@ class ReservasController extends Controller
             'error' => false,
             'message' => 'Reserva cancelada',
             'reserva' => $reserva,
-            '' => $notificaAlteracao,
-            'reserva' => $reserva
+            'notificacao' => $notificaAlteracao,
+            'reserva' => $reserva,
+            'historico' => $historico
         ], 200);
     }
 
