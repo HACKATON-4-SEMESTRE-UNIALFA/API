@@ -59,6 +59,7 @@ class AmbienteController extends Controller
             [
                 'required' => 'O campo :attribute e obrigatorio!',
                 'string' => 'O campo :attribute e string!',
+                'in' => 'O campo :attribute precisa ser Disponível,Indisponível ou Manutenção'  
             ],
             [
                 'nome' => 'Nome',
@@ -72,7 +73,7 @@ class AmbienteController extends Controller
             return response()->json([
                 'error' => true,
                 'message' => 'Erro na validacao dos dados',
-                'error' => $validator->error()
+                'error' => $validator->errors()
             ], 200);
         }
 

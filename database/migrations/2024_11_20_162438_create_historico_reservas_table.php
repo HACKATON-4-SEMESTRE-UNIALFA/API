@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('id_reserva')->constrained('reservas')->onDelete('cascade');
             $table->foreignId('id_usuario')->constrained('usuarios')->onDelete('cascade');
             $table->foreignId('id_ambiente')->constrained('ambientes')->onDelete('cascade');
-            $table->string('id_alteracao');
+            $table->integer('id_alteracao');
             $table->string('horario');
             $table->string('data');
             $table->string('status');

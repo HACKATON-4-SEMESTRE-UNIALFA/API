@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AmbienteController;
 use App\Http\Controllers\HistoricoReservaController;
 use App\Http\Controllers\HorarioFuncionamentoController;
-use App\Http\Controllers\ImagemAmbienteController;
 use App\Http\Controllers\NotificacaoController;
 use App\Http\Controllers\ReservasController;
 
@@ -18,9 +17,10 @@ Route::post('/ambientes', [AmbienteController::class, 'store']); //Cadastra novo
 
 Route::post('/imagens/{id}', [AmbienteController::class, 'storeImage']); //Retorna um file da imagem
 
+
+
 Route::middleware(['auth.jwt'])->group(function () {
 
-    
     //Ambientes
     Route::get('/ambientes', [AmbienteController::class, 'index']); // Listas Ambientes
     Route::get('/ambientes/{id}', [AmbienteController::class, 'show']); // Lista Ambiente por ID

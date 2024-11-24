@@ -8,6 +8,7 @@ use App\Models\HorarioFuncionamento;
 use App\Models\Notificacao;
 use App\Models\Reservas;
 use App\Models\Usuario;
+use Faker\Core\Number;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -130,13 +131,12 @@ class ReservasController extends Controller
             $request->all(),
             [
                 'id_ambiente' => 'required|exists:ambientes,id',
-                'id_alteracao' => 'required|string',
+                'id_alteracao' => 'required|integer',
                 'horario' => 'required|string',
                 'data' => 'required|date_format:Y-m-d',
             ],
             [
                 'required' => 'O campo :attribute e obrigatorio',
-                'id_usuario.exists' => 'O :attribute informado nao existe na tabela usuarios',
                 'id_ambientes.exists' => 'O :attribute informado nao existe na tabela ambientes',
                 'date_format' => 'O :attribute deve estar no formato correto: :format.',
                 'string' => 'O :attribute deve ser string',
@@ -157,8 +157,16 @@ class ReservasController extends Controller
             ], 404);
         }
 
-        $tipo = $request->tipo;
-        $mensagem = $request->mensagem;
+        $usuarioAlteracao = Usuario::find($request->id_alteracao);
+        if(!$usuarioAlteracao){
+            return response()->json([
+                'error' => true,
+                'message' => 'Não foi possivel encontrar usuario que esta solicitando alteração'
+            ], 500);
+        }
+
+        $tipo = 'Alteração';
+        $mensagem = 'Reserva alterada por ' . $usuarioAlteracao->nome;
 
         $reservaAtual = Reservas::find($id);
 
@@ -170,7 +178,7 @@ class ReservasController extends Controller
         }
 
 
-        $notificaAlteracao = NotificacaoController::store($reservaAtual, $request->id_usuario, $tipo, $mensagem);
+        $notificaAlteracao = NotificacaoController::store($reservaAtual, $reservaAtual->id_usuario, $tipo, $mensagem);
 
         $historico = HistoricoReserva::create([
             'id_reserva' => $reservaAtual->id,
@@ -201,7 +209,7 @@ class ReservasController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Desabilita o status da deserva (altera para cancelado)
      */
     public function desable(Request $request, $id, $id_alteracao)
     {
