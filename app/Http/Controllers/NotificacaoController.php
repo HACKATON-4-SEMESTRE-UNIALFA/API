@@ -116,6 +116,36 @@ class NotificacaoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    public function usuarioAllNotificacao($id)
+    {
+        $usuario = Usuario::find($id);
+
+        if (!$usuario) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Usuário não encontrado'
+            ], 404);
+        }
+
+        $notificacoes = Notificacao::where('id_usuario', $id)->get();
+
+        if ($notificacoes->isEmpty()) {
+            return response()->json([
+                'error' => false,
+                'message' => 'Nenhuma notificação pendente para este usuário'
+            ], 200);
+        }
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Todas as notificações foram marcadas como visualizadas',
+            'notificacao' => $notificacoes->count(),
+        ], 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
     public function usuarioViewFalse($id)
     {
         $usuario = Usuario::find($id);
