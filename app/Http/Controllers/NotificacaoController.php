@@ -39,9 +39,9 @@ class NotificacaoController extends Controller
 
         $ambiente = Ambiente::find($reserva->id_ambiente);
 
+        $dataReserva = \Carbon\Carbon::parse($reserva->data)->format('d-m-Y');
 
-
-        $infoReserva = "{$ambiente->nome}, {$reserva->data}, {$reserva->horario}";
+        $infoReserva = "{$ambiente->nome}, {$dataReserva}, {$reserva->horario}";
 
         $notificacao = Notificacao::create([
             'id_reserva' => $reserva->id,
