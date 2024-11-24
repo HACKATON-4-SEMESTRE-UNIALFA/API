@@ -41,6 +41,54 @@ class AmbienteController extends Controller
         return response()->json(['error' => 'Imagem não encontrada'], 404);
     }
 
+    public function storeImage(Request $request, $id)
+    {
+
+        // Validação: Verifica se a requisição contém uma imagem válida
+        $request->validate([
+            'imagem' => 'required|image|mimes:jpeg,png,jpg,gif|max:20480', // Max 20MB
+        ]);
+
+        // Encontra o ambiente pelo ID
+        $ambiente = Ambiente::find($id);
+
+        if (!$ambiente) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Ambiente não encontrado'
+            ], 404);
+        }
+        // Verifica se o arquivo foi enviado corretamente
+        if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
+            // Armazena o arquivo
+            $path = $request->file('imagem')->store('imagens', 'public');
+            $nomeArquivo = basename($path);
+
+            try {
+
+                $ambiente = Ambiente::create([
+                    'imagem' =>  $nomeArquivo,
+                ], 201);
+
+                return response()->json([
+                    'error' => false,
+                    'message' => 'Ambiente atualizado com sucesso!',
+                    'ambiente' => $ambiente,
+                ], 201);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'mensagem' => 'Erro ao salvar no banco de dados',
+                    'erro' => $e->getMessage()
+                ], 500);
+            }
+        }
+        return response()->json([
+            'error' => true,
+            'mensagem' => 'Falha ao enviar arquivo'
+        ], 500);
+    }
+
+
     /**
      * Cria um novo ambiente
      */
@@ -63,7 +111,8 @@ class AmbienteController extends Controller
                 'capacidade' => 'capacidade',
                 'equipamentos_disponiveis' => 'equipamentos_disponiveis',
                 'imagem' => 'imagem',
-            ]);
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json([
@@ -132,9 +181,12 @@ class AmbienteController extends Controller
     /**
      * Edita o ambiente por id
      */
+
     public function update(Request $request, $id)
     {
-        // Encontre o ambiente pelo ID
+
+        dd($request);
+
         $ambiente = Ambiente::find($id);
 
         if (!$ambiente) {
@@ -144,7 +196,6 @@ class AmbienteController extends Controller
             ], 404);
         }
 
-        // Validação dos dados recebidos
         $validator = Validator::make(
             $request->all(),
             [
@@ -152,7 +203,7 @@ class AmbienteController extends Controller
                 'capacidade' => 'required|string',
                 'status' => 'required|in:disponivel,indisponivel,manutencao',
                 'equipamentos_disponiveis' => 'required|string',
-                'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480', // Imagem opcional
+                'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
             ],
             [
                 'required' => 'O campo :attribute é obrigatório!',
@@ -185,17 +236,15 @@ class AmbienteController extends Controller
 
             // Se uma nova imagem for enviada
             if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
-                // Deleta a imagem antiga, se existir
-                if ($ambiente->imagem) {
-                    Storage::disk('public')->delete('imagens/' . $ambiente->imagem);
-                }
 
                 // Armazena a nova imagem
                 $path = $request->file('imagem')->store('imagens', 'public');
                 $nomeArquivo = basename($path);
 
                 // Atualiza o campo de imagem
-                $ambiente->imagem = $nomeArquivo;
+                $ambiente->update([
+                    'imagem' => $nomeArquivo                                  
+                ]);
             }
 
             // Salva as alterações no banco de dados

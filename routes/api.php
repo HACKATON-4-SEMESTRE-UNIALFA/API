@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AmbienteController;
 use App\Http\Controllers\HistoricoReservaController;
 use App\Http\Controllers\HorarioFuncionamentoController;
+use App\Http\Controllers\ImagemAmbienteController;
 use App\Http\Controllers\NotificacaoController;
 use App\Http\Controllers\ReservasController;
 
@@ -12,16 +13,18 @@ use App\Http\Controllers\ReservasController;
 Route::post('/login', [UsuarioController::class, 'login']); //Realiza o login e gera o token de usuarios cadastrados
 Route::post('/usuarios', [UsuarioController::class, 'store']); // Criar um novo usuário
 Route::get('/imagens/{filename}', [AmbienteController::class, 'showImage']); //Retorna um file da imagem
+Route::post('/imagens/{id}', [AmbienteController::class, 'storeImage']); //Retorna um file da imagem
 
 
 Route::middleware(['auth.jwt'])->group(function () {
 
+    
     //Ambientes
     Route::get('/ambientes', [AmbienteController::class, 'index']); // Listas Ambientes
     Route::get('/ambientes/{id}', [AmbienteController::class, 'show']); // Lista Ambiente por ID
     Route::post('/ambientes', [AmbienteController::class, 'store']); //Cadastra novos ambientes
-    Route::put('/ambientes/{id}', [AmbienteController::class, 'update']); //Edita usuario por id
-    Route::put('/ambientes/desabilita/{id}', [AmbienteController::class, 'desable']); //Deleta usuario por id
+    Route::put('/ambientes/desabilita/{id}', [AmbienteController::class, 'desable']); //Desabilita o ambiente
+    Route::post('/ambientes/{id}', [AmbienteController::class, 'update']); //Edita o ambiente
 
     //Usuarios
     Route::get('/usuarios', [UsuarioController::class, 'index']); // Listar todos os usuários
@@ -47,10 +50,12 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::get('/verificaReservaHorario/{id}/{data}', [ReservasController::class, 'verificaReservaHorario']); // Retorna os horarios preenchidos e um dia
     Route::post('/reservas', [ReservasController::class, 'store']); // Criar um novo reserva
     Route::put('/reservas/{id}', [ReservasController::class, 'update']); // Atualizar um reserva existente
+    Route::put('/reservas/usuario/{id}', [ReservasController::class, 'showUserReserva']); // Atualizar um reserva existente
 
     //Historico de Reservas
     Route::get('/reserva/historico', [HistoricoReservaController::class, 'index']); // Listar todos os reservas
     Route::get('/reserva/historico/{id}', [HistoricoReservaController::class, 'show']); // Mostrar um reserva específico
+    Route::get('/reserva/historico/usuario/{id}', [HistoricoReservaController::class, 'showUser']); // Mostrar um reserva específico
 
     //Notificacao
     Route::get('/reserva/notificacao', [NotificacaoController::class, 'index']); // Listar todas as notificacoes

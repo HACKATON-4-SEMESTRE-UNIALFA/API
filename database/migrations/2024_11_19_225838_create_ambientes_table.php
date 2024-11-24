@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('capacidade');
             $table->string('status');
             $table->string('equipamentos_disponiveis');
-            $table->string('imagem')->nullable();
+            $table->string('imagem');
             $table->timestamps();
         });
     }

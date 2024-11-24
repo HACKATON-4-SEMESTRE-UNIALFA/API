@@ -49,4 +49,25 @@ class HistoricoReservaController extends Controller
             'historico' => $historicoReserva,
         ], 200);
     }
+
+    /**
+     * Display the specified resource.
+     */
+    public function showUser($id)
+    {
+        $historicoReservaUsuario = HistoricoReserva::where('id_usuario', $id);
+
+        if (!$historicoReservaUsuario) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Historico de alteracao nao encontrado',
+            ], 404);
+        }
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Historico de alteracao listado com sucesso',
+            'historico' => $historicoReservaUsuario,
+        ], 200);
+    }
 }

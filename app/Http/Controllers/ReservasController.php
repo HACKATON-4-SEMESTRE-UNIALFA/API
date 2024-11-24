@@ -79,7 +79,7 @@ class ReservasController extends Controller
             'status' => 'ativo'
         ]);
 
-        
+
         $historicoOk = HistoricoReserva::create([
             'id_usuario' => $request->input('id_usuario'),
             'id_ambiente' => $request->input('id_ambiente'),
@@ -89,8 +89,8 @@ class ReservasController extends Controller
             'data' => $request->input('data'),
             'status' => 'ativo'
         ]);
-        
-        
+
+
         return response()->json([
             'error' => false,
             'message' => 'Reserva cadastrada com sucesso!',
@@ -98,28 +98,28 @@ class ReservasController extends Controller
             'historico' => $historicoOk,
         ], 201);
     }
-    
+
     /**
      * Display the specified resource.
      */
     public function show($id)
     {
         $reserva = Reservas::find($id);
-        
+
         if (!$reserva) {
             return response()->json([
                 'error' => true,
                 'message' => 'Nenhum reserva encontrada'
             ], 404);
         }
-        
+
         return response()->json([
             'error' => false,
             'message' => 'Reserva encontrada',
             'reserva' => $reserva
         ], 200);
     }
-    
+
     /**
      * Update the specified resource in storage.
      */
@@ -133,7 +133,6 @@ class ReservasController extends Controller
                 'id_ambiente' => 'required|exists:ambientes,id',
                 'horario' => 'required|string',
                 'data' => 'required|date_format:Y-m-d',
-                'status' => 'required|in:ativo,inativo,cancelado'
             ],
             [
                 'required' => 'O campo :attribute e obrigatorio',
@@ -147,11 +146,10 @@ class ReservasController extends Controller
                 'id_usuario' => 'Id Usuario',
                 'data' => 'data',
                 'horario' => 'Horario',
-                'status' => 'status'
             ],
             422
         );
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'error' => true,
@@ -159,20 +157,20 @@ class ReservasController extends Controller
                 'errors' => $validator->errors(),
             ], 404);
         }
-        
-        $tipo = $request->tipo ;
-        $mensagem = $request->mensagem; 
+
+        $tipo = $request->tipo;
+        $mensagem = $request->mensagem;
 
         $reservaAtual = Reservas::find($id);
 
-        if(!$reservaAtual){
+        if (!$reservaAtual) {
             return response()->json([
                 'error' => true,
                 'message' => 'Nenhuma reserva encontrada',
             ]);
         }
 
-        
+
         $notificaAlteracao = NotificacaoController::store($reservaAtual, $request->id_usuario, $tipo, $mensagem);
 
         $historico = HistoricoReserva::create([
@@ -182,7 +180,7 @@ class ReservasController extends Controller
             'id_ambiente' => $request->input('id_ambiente'),
             'horario' => $request->input('horario'),
             'data' => $request->input('data'),
-            'status' => $request->input('status')
+            'status' => $reservaAtual->status
         ]);
 
 
@@ -191,7 +189,7 @@ class ReservasController extends Controller
             'id_ambiente' => $request->id_ambiente,
             'horario' => $request->horario,
             'data' => $request->data,
-            'status' => $request->status
+            'status' => $reservaAtual->status
         ]);
 
         return response()->json([
@@ -339,5 +337,27 @@ class ReservasController extends Controller
             'data' => $data,
             'horariosDisponiveis' => $horariosDisponiveis,
         ]);
+    }
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function showUserReserva($id)
+    {
+        $reservas = Reservas::where('id_usuario', $id);
+
+        if (!$reservas) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Historico de alteracao nao encontrado',
+            ], 404);
+        }
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Historico de alteracao listado com sucesso',
+            'historico' => $reservas,
+        ], 200);
     }
 }
