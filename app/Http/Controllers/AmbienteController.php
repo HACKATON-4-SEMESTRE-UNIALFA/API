@@ -29,10 +29,10 @@ class AmbienteController extends Controller
     }
 
 
-    public function showImage($dirname, $filename)
+    public function showImage($filename)
     {
 
-        $filePath = "{$dirname}/{$filename}";
+        $filePath = "/imagens/{$filename}";
 
         if (Storage::disk('public')->exists($filePath)) {
             return response()->file(Storage::disk('public')->path($filePath));

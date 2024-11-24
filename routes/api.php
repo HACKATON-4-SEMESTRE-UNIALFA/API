@@ -11,12 +11,12 @@ use App\Http\Controllers\ReservasController;
 //Login de Usuarios
 Route::post('/login', [UsuarioController::class, 'login']); //Realiza o login e gera o token de usuarios cadastrados
 Route::post('/usuarios', [UsuarioController::class, 'store']); // Criar um novo usuário
+Route::get('/imagens/{filename}', [AmbienteController::class, 'showImage']); //Retorna um file da imagem
 
 
 Route::middleware(['auth.jwt'])->group(function () {
 
     //Ambientes
-    Route::get('/imagens', [AmbienteController::class, 'showImage']); //Retorna um file da imagem
     Route::get('/ambientes', [AmbienteController::class, 'index']); // Listas Ambientes
     Route::get('/ambientes/{id}', [AmbienteController::class, 'show']); // Lista Ambiente por ID
     Route::post('/ambientes', [AmbienteController::class, 'store']); //Cadastra novos ambientes
