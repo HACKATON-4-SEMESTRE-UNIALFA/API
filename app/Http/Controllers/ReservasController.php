@@ -129,7 +129,6 @@ class ReservasController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'id_usuario' => 'required|exists:usuarios,id',
                 'id_ambiente' => 'required|exists:ambientes,id',
                 'id_alteracao' => 'required|string',
                 'horario' => 'required|string',
@@ -144,7 +143,6 @@ class ReservasController extends Controller
             ],
             [
                 'id_ambiente' => 'Id Ambiente',
-                'id_usuario' => 'Id Usuario',
                 'data' => 'data',
                 'horario' => 'Horario',
             ],
@@ -177,7 +175,7 @@ class ReservasController extends Controller
         $historico = HistoricoReserva::create([
             'id_reserva' => $reservaAtual->id,
             'id_alteracao' => $request->id_alteracao,
-            'id_usuario' => $request->input('id_usuario'),
+            'id_usuario' => $reservaAtual->id_usuario,
             'id_ambiente' => $request->input('id_ambiente'),
             'horario' => $request->input('horario'),
             'data' => $request->input('data'),
@@ -186,7 +184,7 @@ class ReservasController extends Controller
 
 
         $reservaAtual->update([
-            'id_usuario' => $request->id_usuario,
+            'id_usuario' => $reservaAtual->id_usuario,
             'id_ambiente' => $request->id_ambiente,
             'horario' => $request->horario,
             'data' => $request->data,
@@ -225,7 +223,7 @@ class ReservasController extends Controller
             ]
         );
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
                 'error' => true,
                 'message' => 'Erro na validacao de dados',
