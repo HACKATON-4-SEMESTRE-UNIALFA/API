@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HistoricoReserva;
+use App\Models\Reservas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -55,9 +56,9 @@ class HistoricoReservaController extends Controller
      */
     public function showUser($id)
     {
-        $historicoReservaUsuario = HistoricoReserva::where('id_usuario', $id);
+        $historicoReserva = Reservas::where('id_reserva', $id);
 
-        if (!$historicoReservaUsuario) {
+        if (!$historicoReserva) {
             return response()->json([
                 'error' => true,
                 'message' => 'Historico de alteracao nao encontrado',
@@ -67,7 +68,7 @@ class HistoricoReservaController extends Controller
         return response()->json([
             'error' => false,
             'message' => 'Historico de alteracao listado com sucesso',
-            'historico' => $historicoReservaUsuario,
+            'historico' => $historicoReserva,
         ], 200);
     }
 }

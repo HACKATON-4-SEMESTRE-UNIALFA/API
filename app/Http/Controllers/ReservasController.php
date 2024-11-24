@@ -247,9 +247,20 @@ class ReservasController extends Controller
             ], 422);
         }
 
-        $tipo = 'Cancelado';
+        $usuarioAlteracao = Usuario::find($request->id_alteracao);
+        if (!$usuarioAlteracao) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Não foi possivel encontrar usuario que esta solicitando alteração'
+            ], 500);
+        }
 
-        $notificaAlteracao = NotificacaoController::store($reserva, $reserva->id_usuario, $tipo, $request->mensagem);
+        $tipo = 'Cancelado';
+        $mensagem = $request->mensagem . ', Cancelado por: ' . $usuarioAlteracao->nome;
+
+
+
+        $notificaAlteracao = NotificacaoController::store($reserva, $reserva->id_usuario, $tipo, $mensagem);
 
         $historico = HistoricoReserva::create([
             'id_reserva' => $reserva->id,
