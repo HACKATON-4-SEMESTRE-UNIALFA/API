@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 class HistoricoReservaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Visualizar todas as reservas independente de usuario ou id reserva
      */
     public function index()
     {
@@ -30,7 +30,7 @@ class HistoricoReservaController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Visualizar todas as alteracoes de uma reserva especifica
      */
     public function show($id)
     {
@@ -51,7 +51,7 @@ class HistoricoReservaController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Visualizar todas as alteracoes de historico de reservas de um usuario especifico
      */
     public function showUser($id)
     {

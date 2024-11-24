@@ -84,7 +84,7 @@ class ReservasController extends Controller
             'id_usuario' => $request->input('id_usuario'),
             'id_ambiente' => $request->input('id_ambiente'),
             'id_reserva' => $reserva->id,
-            'id_alteracao' => $request->input('id_alteracao'),
+            'id_alteracao' => $request->input('id_usuario'),
             'horario' => $request->input('horario'),
             'data' => $request->input('data'),
             'status' => 'ativo'
@@ -131,6 +131,7 @@ class ReservasController extends Controller
             [
                 'id_usuario' => 'required|exists:usuarios,id',
                 'id_ambiente' => 'required|exists:ambientes,id',
+                'id_alteracao' => 'required|string',
                 'horario' => 'required|string',
                 'data' => 'required|date_format:Y-m-d',
             ],
@@ -204,8 +205,34 @@ class ReservasController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function desable($id)
+    public function desable(Request $request, $id, $id_alteracao)
     {
+
+        //Tratar request
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'mensagem' => 'required|string|max:100',
+            ],
+            [
+                'required' => 'O campo :attribute e obrigatorio',
+                'strin' => 'O campo :attribute e string',
+                'max' => 'O campo :attribute deve conter no maximo 100 caracteres',
+            ],
+            [
+                'mensagem' => 'Mensagem',
+            ]
+        );
+
+        if($validator->fails()){
+            return response()->json([
+                'error' => true,
+                'message' => 'Erro na validacao de dados',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
         $reserva = Reservas::find($id);
 
         if (!$reserva) {
@@ -214,6 +241,23 @@ class ReservasController extends Controller
                 'message' => 'Nenhum reserva encontrada'
             ], 404);
         }
+
+        $tipo = 'Cancelado';
+
+
+        $notificaAlteracao = NotificacaoController::store($reserva, $reserva->id_usuario, $tipo, $request->mensagem);
+
+        $historico = HistoricoReserva::create([
+            'id_reserva' => $reserva->id,
+            'id_alteracao' => $id_alteracao,
+            'id_usuario' => $reserva->input('id_usuario'),
+            'id_ambiente' => $reserva->input('id_ambiente'),
+            'horario' => $reserva->input('horario'),
+            'data' => $reserva->input('data'),
+            'status' => 'cancelado'
+        ]);
+
+
 
         $reserva->update([
             'status' => 'cancelado'
@@ -222,31 +266,8 @@ class ReservasController extends Controller
         return response()->json([
             'error' => false,
             'message' => 'Reserva cancelada',
-            'reserva' => $reserva
-        ], 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function enable($id)
-    {
-        $reserva = Reservas::find($id);
-
-        if (!$reserva) {
-            return response()->json([
-                'error' => true,
-                'message' => 'Nenhum reserva encontrada'
-            ], 404);
-        }
-
-        $reserva->update([
-            'status' => 'ativo'
-        ]);
-
-        return response()->json([
-            'error' => false,
-            'message' => 'Reserva ativada',
+            'reserva' => $reserva,
+            '' => $notificaAlteracao,
             'reserva' => $reserva
         ], 200);
     }

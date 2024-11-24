@@ -43,7 +43,7 @@ Route::middleware(['auth.jwt'])->group(function () {
 
     //Reservas
     Route::get('/reservas', [ReservasController::class, 'index']); // Listar todos os reservas
-    Route::put('/reservas/desativa/{id}', [ReservasController::class, 'desable']); // Desativar uma reserva
+    Route::put('/reservas/desativa/{id}/usuario/{id_alteracao}', [ReservasController::class, 'desable']); // Desativar uma reserva
     Route::put('/reservas/ativa/{id}', [ReservasController::class, 'enable']); // Ativar uma reserva
     Route::get('/reservas/{id}', [ReservasController::class, 'show']); // Mostrar um reserva específico
     Route::get('/verificaReservaDia/{id}', [ReservasController::class, 'verificaReservaDia']); // Retorna os dias que estao com todos os horarios preenchidos
