@@ -62,5 +62,6 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::get('/reserva/notificacao', [NotificacaoController::class, 'index']); // Listar todas as notificacoes
     Route::get('/reserva/notificacao/{id}', [NotificacaoController::class, 'show']); // Mostrar uma notificacao especifica
     Route::put('/notificacoes/marcarTodas/{id}', [NotificacaoController::class, 'enableView']); // Marca como visualizada a notificacao
+    Route::get('/notificacoes/visualizadas/{id}', [NotificacaoController::class, 'usuarioViewFalse']); // Marca como visualizada a notificacao
 
 });
