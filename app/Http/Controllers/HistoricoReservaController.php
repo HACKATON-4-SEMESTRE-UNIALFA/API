@@ -52,11 +52,11 @@ class HistoricoReservaController extends Controller
     }
 
     /**
-     * Visualizar todas as alteracoes de historico de reservas de um usuario especifico
+     * Visualizar todas as alteracoes de historico de reservas de uma reserva especifica
      */
     public function showUser($id)
     {
-        $historicoReserva = Reservas::where('id_reserva', $id);
+        $historicoReserva = HistoricoReserva::where('id_reserva', $id)->get();
 
         if (!$historicoReserva) {
             return response()->json([

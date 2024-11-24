@@ -56,7 +56,7 @@ Route::middleware(['auth.jwt'])->group(function () {
     //Historico de Reservas
     Route::get('/reserva/historico', [HistoricoReservaController::class, 'index']); // Listar todos os reservas
     Route::get('/reserva/historico/{id}', [HistoricoReservaController::class, 'show']); // Mostrar um reserva específico
-    Route::get('/reserva/historico/usuario/{id}', [HistoricoReservaController::class, 'showUser']); // Mostrar um reserva específico
+    Route::get('/reserva/{id}/historico', [HistoricoReservaController::class, 'showUser']); // Mostrar um reserva específico
 
     //Notificacao
     Route::get('/reserva/notificacao', [NotificacaoController::class, 'index']); // Listar todas as notificacoes
