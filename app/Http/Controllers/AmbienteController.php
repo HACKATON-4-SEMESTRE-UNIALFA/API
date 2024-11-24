@@ -221,9 +221,9 @@ class AmbienteController extends Controller
     /**
      * Lista todos os ambientes disponiveis
      */
-    public function showEnable($id)
+    public function showEnableAll()
     {
-        $ambiente = Ambiente::find($id)->where('status', 'Disponível');
+        $ambiente = Ambiente::all()->where('status', 'Disponível');
 
         if (!$ambiente) {
             return response()->json([
