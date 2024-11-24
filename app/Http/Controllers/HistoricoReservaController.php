@@ -56,19 +56,31 @@ class HistoricoReservaController extends Controller
      */
     public function showUser($id)
     {
-        $historicoReserva = HistoricoReserva::where('id_reserva', $id)->get();
+        $historicoReserva = HistoricoReserva::with(['ambiente', 'alteracao'])
+            ->where('id_reserva', $id)
+            ->get();
 
-        if (!$historicoReserva) {
+        if ($historicoReserva->isEmpty()) {
             return response()->json([
                 'error' => true,
-                'message' => 'Historico de alteracao nao encontrado',
+                'message' => 'Historico de alteração não encontrado',
             ], 404);
+
         }
+
 
         return response()->json([
             'error' => false,
-            'message' => 'Historico de alteracao listado com sucesso',
-            'historico' => $historicoReserva,
+            'message' => 'Histórico de alteração listado com sucesso',
+            'historico' => $historicoReserva->map(function ($item) {
+                return [
+                    'id_reserva' => $item->id_reserva,
+                    'data' => $item->created_at->format('d-m-Y H:i:s'),
+                    'ambiente' => $item->ambiente->nome ?? 'Ambiente não encontrado',
+                    'alteracao' => $item->alteracao->nome ?? 'Usuário não encontrado',
+                    'tipo_alteracao' => $item->status,
+                ];
+            }),
         ], 200);
     }
 }

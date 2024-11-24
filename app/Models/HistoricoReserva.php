@@ -28,11 +28,16 @@ class HistoricoReserva extends Model
 
     public function ambiente()
     {
-        return $this->belongsTo(Ambiente::class);
+        return $this->belongsTo(Ambiente::class ,'id_ambiente');
     }
 
     public function usuario()
     {
-        return $this->belongsTo(Usuario::class);
+        return $this->belongsTo(Usuario::class, 'id_usuario');
+    }
+
+    public function alteracao()
+    {
+        return $this->belongsTo(Usuario::class, 'id_alteracao');
     }
 }
