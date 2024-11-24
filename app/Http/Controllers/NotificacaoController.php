@@ -52,11 +52,7 @@ class NotificacaoController extends Controller
             'visualizacao' => false,
         ]);
 
-        return response()->json([
-            'error' => false,
-            'message' => 'Notificacao criada',
-            'notificacao' => $notificacao,
-        ], 200);
+        return $notificacao;
     }
 
     /**
