@@ -10,6 +10,7 @@ use App\Http\Controllers\ReservasController;
 
 //Login de Usuarios
 Route::post('/login', [UsuarioController::class, 'login']); //Realiza o login e gera o token de usuarios cadastrados
+Route::post('/usuarios', [UsuarioController::class, 'store']); // Criar um novo usuário
 
 
 Route::middleware(['auth.jwt'])->group(function () {
@@ -26,7 +27,6 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::get('/usuarios', [UsuarioController::class, 'index']); // Listar todos os usuários
     Route::put('/usuarios/desabilita/{id}', [UsuarioController::class, 'desable']); // Deletar um usuário
     Route::get('/usuarios/{id}', [UsuarioController::class, 'show']); // Mostrar um usuário específico
-    Route::post('/usuarios', [UsuarioController::class, 'store']); // Criar um novo usuário
     Route::put('/usuarios/{id}', [UsuarioController::class, 'update']); // Atualizar um usuário existente
 
     //Horario de Funcionamento
