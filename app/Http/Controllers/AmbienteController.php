@@ -41,58 +41,11 @@ class AmbienteController extends Controller
         return response()->json(['error' => 'Imagem não encontrada'], 404);
     }
 
-    public function storeImage(Request $request, $id)
-    {
-
-        // Validação: Verifica se a requisição contém uma imagem válida
-        $request->validate([
-            'imagem' => 'required|image|mimes:jpeg,png,jpg,gif|max:20480', // Max 20MB
-        ]);
-
-        // Encontra o ambiente pelo ID
-        $ambiente = Ambiente::find($id);
-
-        if (!$ambiente) {
-            return response()->json([
-                'error' => true,
-                'message' => 'Ambiente não encontrado'
-            ], 404);
-        }
-        // Verifica se o arquivo foi enviado corretamente
-        if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
-            // Armazena o arquivo
-            $path = $request->file('imagem')->store('imagens', 'public');
-            $nomeArquivo = basename($path);
-
-            try {
-
-                $ambiente = Ambiente::create([
-                    'imagem' =>  $nomeArquivo,
-                ], 201);
-
-                return response()->json([
-                    'error' => false,
-                    'message' => 'Ambiente atualizado com sucesso!',
-                    'ambiente' => $ambiente,
-                ], 201);
-            } catch (\Exception $e) {
-                return response()->json([
-                    'mensagem' => 'Erro ao salvar no banco de dados',
-                    'erro' => $e->getMessage()
-                ], 500);
-            }
-        }
-        return response()->json([
-            'error' => true,
-            'mensagem' => 'Falha ao enviar arquivo'
-        ], 500);
-    }
-
 
     /**
      * Cria um novo ambiente
      */
-    public function store(Request $request) //Adicionar parametro de imagem
+    public function store(Request $request)
     {
         $validator = Validator::make(
             $request->all(),
@@ -101,6 +54,7 @@ class AmbienteController extends Controller
                 'capacidade' => 'required|string',
                 'equipamentos_disponiveis' => 'required|string',
                 'imagem' => 'required|image|mimes:jpeg,png,jpg,gif|max:20480',
+                'status' => 'required|in:Disponível,Indisponível,Manutenção',
             ],
             [
                 'required' => 'O campo :attribute e obrigatorio!',
@@ -122,7 +76,7 @@ class AmbienteController extends Controller
             ], 200);
         }
 
-        // Verifica se o arquivo foi enviado corretamente
+        // Verifica se o arquivo foi enviado corretamente 
         if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
             // Armazena o arquivo
             $path = $request->file('imagem')->store('imagens', 'public');
@@ -133,7 +87,7 @@ class AmbienteController extends Controller
                 $ambiente = Ambiente::create([
                     'nome' => $request->input('nome'),
                     'capacidade' => $request->input('capacidade'),
-                    'status' => 'disponivel',
+                    'status' => $request->input('status'),
                     'equipamentos_disponiveis' => $request->input('equipamentos_disponiveis'),
                     'imagem' =>  $nomeArquivo,
                 ], 201);
@@ -185,8 +139,6 @@ class AmbienteController extends Controller
     public function update(Request $request, $id)
     {
 
-        dd($request);
-
         $ambiente = Ambiente::find($id);
 
         if (!$ambiente) {
@@ -201,7 +153,7 @@ class AmbienteController extends Controller
             [
                 'nome' => 'required|string',
                 'capacidade' => 'required|string',
-                'status' => 'required|in:disponivel,indisponivel,manutencao',
+                'status' => 'required|in:Disponível,Indisponível,Manutenção',
                 'equipamentos_disponiveis' => 'required|string',
                 'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
             ],

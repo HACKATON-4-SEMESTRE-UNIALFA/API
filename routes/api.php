@@ -13,8 +13,10 @@ use App\Http\Controllers\ReservasController;
 Route::post('/login', [UsuarioController::class, 'login']); //Realiza o login e gera o token de usuarios cadastrados
 Route::post('/usuarios', [UsuarioController::class, 'store']); // Criar um novo usuário
 Route::get('/imagens/{filename}', [AmbienteController::class, 'showImage']); //Retorna um file da imagem
-Route::post('/imagens/{id}', [AmbienteController::class, 'storeImage']); //Retorna um file da imagem
+Route::post('/ambientes/{id}', [AmbienteController::class, 'update']); //Edita o ambiente
+Route::post('/ambientes', [AmbienteController::class, 'store']); //Cadastra novos ambientes
 
+Route::post('/imagens/{id}', [AmbienteController::class, 'storeImage']); //Retorna um file da imagem
 
 Route::middleware(['auth.jwt'])->group(function () {
 
@@ -22,9 +24,7 @@ Route::middleware(['auth.jwt'])->group(function () {
     //Ambientes
     Route::get('/ambientes', [AmbienteController::class, 'index']); // Listas Ambientes
     Route::get('/ambientes/{id}', [AmbienteController::class, 'show']); // Lista Ambiente por ID
-    Route::post('/ambientes', [AmbienteController::class, 'store']); //Cadastra novos ambientes
     Route::put('/ambientes/desabilita/{id}', [AmbienteController::class, 'desable']); //Desabilita o ambiente
-    Route::post('/ambientes/{id}', [AmbienteController::class, 'update']); //Edita o ambiente
 
     //Usuarios
     Route::get('/usuarios', [UsuarioController::class, 'index']); // Listar todos os usuários

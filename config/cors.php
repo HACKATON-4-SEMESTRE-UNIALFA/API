@@ -1,30 +1,11 @@
 <?php
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cross-Origin Resource Sharing (CORS) Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Configure os caminhos, origens, métodos e cabeçalhos permitidos.
-    |
-    */
-
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
-
-    'allowed_methods' => ['*'], // Permite todos os métodos (GET, POST, etc.)
-
-    'allowed_origins' => ['*'], // Permite qualquer origem (ou especifique a origem)
-
-    'allowed_origins_patterns' => [],
-
-    'allowed_headers' => ['*'], // Permite todos os cabeçalhos
-
+    'paths' => ['api/*'], // Ou '*' para todas as rotas
+    'allowed_methods' => ['*'],
+    'allowed_origins' => ['*'], // Ou ['http://localhost:5173'] para segurança
+    'allowed_headers' => ['*'],
     'exposed_headers' => [],
-
     'max_age' => 0,
-
     'supports_credentials' => false,
-
 ];

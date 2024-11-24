@@ -34,7 +34,7 @@ class HistoricoReservaController extends Controller
      */
     public function show($id)
     {
-        $historicoReserva = HistoricoReserva::find($id);
+        $historicoReserva = HistoricoReserva::all($id);
 
         if (!$historicoReserva) {
             return response()->json([
