@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ambiente;
 use App\Models\HorarioFuncionamento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -28,6 +29,33 @@ class HorarioFuncionamentoController extends Controller
             'error' => false,
             'message' => 'Horarios Listados',
             'horarios' => $horarioFuncionamento
+        ], 200);
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function horariosAmbiente($id_ambiente)
+    {
+        $ambiente = Ambiente::find($id_ambiente);
+
+
+        if (!$id_ambiente) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Nenhum ambiente encontrado'
+            ], 404);
+        }
+
+
+        $horario = HorarioFuncionamento::where('id_ambiente', $ambiente->id)->get();
+
+
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Horarios do ambiente',
+            'horario' => $horario,
         ], 200);
     }
 
@@ -94,6 +122,63 @@ class HorarioFuncionamentoController extends Controller
             'error' => false,
             'message' => 'Horario encontrado',
             'horario' => $horarioFuncionamento
+        ], 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id, $id_ambiente)
+    {
+        $horarioFuncionamento = HorarioFuncionamento::find($id);
+        $ambiente = Ambiente::find($id_ambiente);
+
+
+        if (!$horarioFuncionamento || !$id_ambiente) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Nenhum ambiente ou horario encontrado'
+            ], 404);
+        }
+
+
+        $horario = HorarioFuncionamento::where('id_ambiente', $ambiente->id)->get();
+
+
+        $validator = Validator::make([
+            $request->all(),
+            [
+                'horario' => 'required',
+                'string',
+                'regex:/^\d{2}:\d{2}-\d{2}:\d{2}$/',
+            ],
+            [
+                'required' => 'O valor :attribute e obrigatorio',
+                'string' => 'O valor :attribute e string',
+                'regex' => 'O valor :attribute deve estar no formato HH:mm-HH:mm',
+            ],
+            [
+                'horario' => 'Horario',
+            ]
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Erro na validacao dos dados',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+
+        $horario->update([
+            'horario' => $request->horario
+        ]);
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Horarios do ambiente',
+            'horario' => $horario,
         ], 200);
     }
 

@@ -35,6 +35,8 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::get('/horarios/{id}', [HorarioFuncionamentoController::class, 'show']); // Mostrar um horario específico
     Route::post('/horarios', [HorarioFuncionamentoController::class, 'store']); // Criar um novo horario
     Route::put('/horarios/{id}', [HorarioFuncionamentoController::class, 'update']); // Atualizar um horario existente
+    Route::get('/horarios/ambiente/{id_ambiente}', [HorarioFuncionamentoController::class, 'horariosAmbiente']); // Atualizar um horario existente
+
 
     //Reservas
     Route::get('/reservas', [ReservasController::class, 'index']); // Listar todos os reservas
