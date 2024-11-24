@@ -12,7 +12,7 @@ use App\Http\Controllers\ReservasController;
 Route::post('/login', [UsuarioController::class, 'login']); //Realiza o login e gera o token de usuarios cadastrados
 Route::post('/usuarios', [UsuarioController::class, 'store']); // Criar um novo usuário
 Route::get('/imagens/{filename}', [AmbienteController::class, 'showImage']); //Retorna um file da imagem
-Route::post('/ambientes/{id}', [AmbienteController::class, 'update']); //Edita o ambiente
+Route::post('/ambientes/{id}/usuario/{id_alteracao}', [AmbienteController::class, 'update']); //Edita o ambiente
 Route::post('/ambientes', [AmbienteController::class, 'store']); //Cadastra novos ambientes
 
 Route::post('/imagens/{id}', [AmbienteController::class, 'storeImage']); //Retorna um file da imagem

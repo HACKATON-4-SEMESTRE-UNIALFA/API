@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use App\Models\Ambiente;
+use App\Models\HistoricoReserva;
+use App\Models\Reservas;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -77,9 +80,8 @@ class AmbienteController extends Controller
             ], 200);
         }
 
-        // Verifica se o arquivo foi enviado corretamente 
         if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
-            // Armazena o arquivo
+
             $path = $request->file('imagem')->store('imagens', 'public');
             $nomeArquivo = basename($path);
 
@@ -137,7 +139,7 @@ class AmbienteController extends Controller
      * Edita o ambiente por id
      */
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $id_alteracao)
     {
 
         $ambiente = Ambiente::find($id);
@@ -171,7 +173,7 @@ class AmbienteController extends Controller
             ]
         );
 
-        // Se houver erros de validação
+
         if ($validator->fails()) {
             return response()->json([
                 'error' => true,
@@ -181,27 +183,55 @@ class AmbienteController extends Controller
         }
 
         try {
-            // Atualiza os dados do ambiente
             $ambiente->nome = $request->input('nome');
             $ambiente->capacidade = $request->input('capacidade');
             $ambiente->status = $request->input('status');
             $ambiente->equipamentos_disponiveis = $request->input('equipamentos_disponiveis');
 
-            // Se uma nova imagem for enviada
             if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
 
-                // Armazena a nova imagem
                 $path = $request->file('imagem')->store('imagens', 'public');
                 $nomeArquivo = basename($path);
 
-                // Atualiza o campo de imagem
                 $ambiente->update([
                     'imagem' => $nomeArquivo
                 ]);
             }
 
-            // Salva as alterações no banco de dados
             $ambiente->save();
+
+            $ambienteStatus = $ambiente->status;
+
+            if ($ambienteStatus !== 'Disponível') {
+
+                $reservas = Reservas::where('id_ambiente', $ambiente->id)
+                    ->where('status', 'Ativo')
+                    ->get();
+
+                if (!$reservas->isEmpty()) {
+
+                    $usuarioAlteracao = Usuario::find($request->id_alteracao);
+
+                    foreach ($reservas as $reserva) {
+                        $reserva->status = 'Cancelado';
+                        $reserva->save();
+
+                        HistoricoReserva::create([
+                            'id_reserva' => $reserva->id,
+                            'id_alteracao' => $usuarioAlteracao->id,
+                            'id_usuario' => $reserva->id_usuario,
+                            'id_ambiente' => $reserva->id_ambiente,
+                            'horario' => $reserva->horario,
+                            'data' => $reserva->data,
+                            'status' => 'Cancelado'
+                        ]);
+
+                        $tipo = 'Cancelado';
+                        $mensagem = 'Reserva cancelada porque o ambiente ' . $ambiente->nome . ' está desativado.';
+                        NotificacaoController::store($reserva, $reserva->id_usuario, $tipo, $mensagem);
+                    }
+                }
+            }
 
             return response()->json([
                 'error' => false,
