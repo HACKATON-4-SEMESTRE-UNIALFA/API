@@ -213,6 +213,15 @@ class ReservasController extends Controller
      */
     public function desable(Request $request, $id, $id_alteracao)
     {
+        
+                $reserva = Reservas::find($id);
+        
+                if (!$reserva) {
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'Nenhum reserva encontrada'
+                    ], 404);
+                }
 
         //Tratar request
 
@@ -237,15 +246,6 @@ class ReservasController extends Controller
                 'message' => 'Erro na validacao de dados',
                 'errors' => $validator->errors(),
             ], 422);
-        }
-
-        $reserva = Reservas::find($id);
-
-        if (!$reserva) {
-            return response()->json([
-                'error' => true,
-                'message' => 'Nenhum reserva encontrada'
-            ], 404);
         }
 
         $tipo = 'Cancelado';
