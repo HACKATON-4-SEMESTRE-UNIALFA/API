@@ -75,10 +75,12 @@ class HistoricoReservaController extends Controller
             'historico' => $historicoReserva->map(function ($item) {
                 return [
                     'id_reserva' => $item->id_reserva,
-                    'data' => $item->created_at->format('d-m-Y H:i:s'),
+                    'nome_alteracao' => $item->alteracao->nome ?? 'Usuário não encontrado',
                     'ambiente' => $item->ambiente->nome ?? 'Ambiente não encontrado',
-                    'alteracao' => $item->alteracao->nome ?? 'Usuário não encontrado',
-                    'tipo_alteracao' => $item->status,
+                    'horario' => $item->horario,
+                    'data' => $item->data,
+                    'status' => $item->status,
+                    'created_at' => $item->created_at->format('d-m-Y H:i:s'),
                 ];
             }),
         ], 200);
