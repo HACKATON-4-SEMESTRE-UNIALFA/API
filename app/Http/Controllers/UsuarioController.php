@@ -136,7 +136,7 @@ class UsuarioController extends Controller
                 'email.unique' => 'O email informado já está cadastrado.',
                 'email.email' => 'O email informado deve estar no formato correto.',
                 'cpf.unique' => 'O CPF informado já está cadastrado.',
-                'cpf.size' => 'O Nome deve conter 11 caracteres no total',
+                'cpf.size' => 'O CPF deve conter 11 caracteres no total',
                 'confirmaSenha.same' => 'As senhas devem ser idênticas',
                 'password.min' => 'As senhas devem conter no minimo 7 caracteres',
                 'nome.min' => 'O nome deve conter no minimo 8 caracteres',

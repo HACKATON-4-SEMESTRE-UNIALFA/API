@@ -63,16 +63,14 @@ class AmbienteController extends Controller
                 'capacidade' => 'capacidade',
                 'equipamentos_disponiveis' => 'equipamentos_disponiveis',
                 'imagem' => 'imagem',
-            ],
-            422
-        );
+            ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'error' => true,
                 'message' => 'Erro na validacao dos dados',
                 'error' => $validator->error()
-            ], 422);
+            ], 200);
         }
 
         // Verifica se o arquivo foi enviado corretamente
