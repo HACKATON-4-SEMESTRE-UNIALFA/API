@@ -79,7 +79,7 @@ class NotificacaoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function desable($id)
+    public function enableView($id)
     {
         $usuario = Usuario::find($id);
 

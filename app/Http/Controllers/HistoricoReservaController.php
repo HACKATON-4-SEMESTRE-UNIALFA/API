@@ -63,11 +63,10 @@ class HistoricoReservaController extends Controller
         if ($historicoReserva->isEmpty()) {
             return response()->json([
                 'error' => true,
-                'message' => 'Historico de alteração não encontrado',
+                'message' => 'Historico de alteracao nao encontrado',
             ], 404);
 
         }
-
 
         return response()->json([
             'error' => false,
@@ -80,7 +79,7 @@ class HistoricoReservaController extends Controller
                     'horario' => $item->horario,
                     'data' => $item->data,
                     'status' => $item->status,
-                    'created_at' => $item->created_at->format('d-m-Y H:i:s'),
+                    'created_at' => $item->created_at,
                 ];
             }),
         ], 200);
