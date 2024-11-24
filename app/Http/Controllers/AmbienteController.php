@@ -218,11 +218,12 @@ class AmbienteController extends Controller
 
 
     /**
-     * Deleta usuario por id
+     * Lista todos os ambientes disponiveis
      */
-    public function desable($id)
+    public function showEnable($id)
     {
-        $ambiente = Ambiente::find($id);
+        $ambiente = Ambiente::find($id)->where('status', 'Disponível');
+
         if (!$ambiente) {
             return response()->json([
                 'error' => true,
@@ -230,9 +231,6 @@ class AmbienteController extends Controller
             ], 404);
         }
 
-        $ambiente->update([
-            'status' => 'indisponivel'
-        ]);
         return response()->json([
             'error' => false,
             'message' => 'Ambiente nao encontrado',
@@ -240,49 +238,5 @@ class AmbienteController extends Controller
         ], 200);
     }
 
-    /**
-     * Deleta usuario por id
-     */
-    public function enable($id)
-    {
-        $ambiente = Ambiente::find($id);
-        if (!$ambiente) {
-            return response()->json([
-                'error' => true,
-                'message' => 'Ambiente nao encontrado!',
-            ], 404);
-        }
 
-        $ambiente->update([
-            'status' => 'disponivel'
-        ]);
-        return response()->json([
-            'error' => false,
-            'message' => 'Ambiente nao encontrado',
-            'ambiente' => $ambiente
-        ], 200);
-    }
-
-    /**
-     * Deleta usuario por id
-     */
-    public function manutencao($id)
-    {
-        $ambiente = Ambiente::find($id);
-        if (!$ambiente) {
-            return response()->json([
-                'error' => true,
-                'message' => 'Ambiente nao encontrado!',
-            ], 404);
-        }
-
-        $ambiente->update([
-            'status' => 'manutencao'
-        ]);
-        return response()->json([
-            'error' => false,
-            'message' => 'Ambiente nao encontrado',
-            'ambiente' => $ambiente
-        ], 200);
-    }
 }

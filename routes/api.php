@@ -25,6 +25,7 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::get('/ambientes', [AmbienteController::class, 'index']); // Listas Ambientes
     Route::get('/ambientes/{id}', [AmbienteController::class, 'show']); // Lista Ambiente por ID
     Route::put('/ambientes/desabilita/{id}', [AmbienteController::class, 'desable']); //Desabilita o ambiente
+    Route::put('/ambientes/disponivel/{id}', [AmbienteController::class, 'showEnable']); //Mostra todos os ambientes disponiveis
 
     //Usuarios
     Route::get('/usuarios', [UsuarioController::class, 'index']); // Listar todos os usuários
