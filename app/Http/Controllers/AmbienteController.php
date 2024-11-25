@@ -138,7 +138,6 @@ class AmbienteController extends Controller
     /**
      * Edita o ambiente por id
      */
-
     public function update(Request $request, $id, $id_alteracao)
     {
 
@@ -268,4 +267,7 @@ class AmbienteController extends Controller
             'ambientes' => $ambientes
         ], 200);
     }
+
+
+    
 }
