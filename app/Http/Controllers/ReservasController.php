@@ -77,7 +77,7 @@ class ReservasController extends Controller
             'id_ambiente' => $request->input('id_ambiente'),
             'horario' => $request->input('horario'),
             'data' => $request->input('data'),
-            'status' => 'ativo'
+            'status' => 'Ativo'
         ]);
 
 
@@ -88,7 +88,7 @@ class ReservasController extends Controller
             'id_alteracao' => $request->input('id_usuario'),
             'horario' => $request->input('horario'),
             'data' => $request->input('data'),
-            'status' => 'ativo'
+            'status' => 'Ativo'
         ]);
 
 
@@ -307,7 +307,7 @@ class ReservasController extends Controller
 
 
         $reservas = Reservas::where('id_ambiente', $idInt)
-            ->where('status', 'ativo')
+            ->where('status', 'Ativo')
             ->get();
 
         $reservasPorData = $reservas->groupBy('data');
@@ -353,7 +353,7 @@ class ReservasController extends Controller
             ->toArray();
 
         $reservasDoDia = Reservas::where('id_ambiente', $idInt)
-            ->where('status', 'ativo')
+            ->where('status', 'Ativo')
             ->where('data', $data)
             ->pluck('horario')
             ->toArray();
@@ -400,7 +400,7 @@ class ReservasController extends Controller
     public function confirmaReservas()
     {
         $reservas = Reservas::where('data', '<', date('Y-m-d'))
-            ->where('status', 'ativo')
+            ->where('status', 'Ativo')
             ->get();
 
         foreach ($reservas as $reserva) {

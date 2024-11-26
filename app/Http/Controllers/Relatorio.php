@@ -27,7 +27,7 @@ class Relatorio extends Controller
 
     public function showRelatorioReservas()
     {
-        $reservas = Reservas::where('status', 'ativo')->count();
+        $reservas = Reservas::where('status', 'Ativo')->count();
         $reservas_confirmadas = Reservas::where('status', 'confirmada')->count();
         $reservas_canceladas = Reservas::where('status', 'cancelado')->count();
 
