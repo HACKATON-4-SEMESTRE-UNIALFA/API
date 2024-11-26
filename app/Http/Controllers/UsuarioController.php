@@ -351,7 +351,7 @@ class UsuarioController extends Controller
     /**
      * Deleta o usuário pelo id
      */
-    public function desable($id)
+    public function desativar($id)
     {
         $usuario = Usuario::find($id);
         if (!$usuario) {
