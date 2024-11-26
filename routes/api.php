@@ -20,17 +20,16 @@ Route::post('/usuarios', [UsuarioController::class, 'store']); // Criar um novo 
 Route::get('/imagens/{filename}', [AmbienteController::class, 'showImage']); //Retorna um file da imagem
 Route::post('/ambientes/{id}/usuario/{id_alteracao}', [AmbienteController::class, 'update']); //Edita o ambiente e salva quem fez a alteração
 Route::post('/ambientes', [AmbienteController::class, 'store']); //Cadastra novos ambientes
-Route::put('/usuarios/ativos', [UsuarioController::class, 'indexEnableUser']); // Listar todos os usuários
-Route::put('/usuarios/inativos', [UsuarioController::class, 'indexEnableUser']); // Listar todos os usuários
+Route::put('/usuarios/desabilita/{id}', [UsuarioController::class, 'desable']); // Deletar um usuário
 
 
 
 Route::middleware(['auth.jwt'])->group(function () {
-
+    
     //Relatorios
     Route::get('/relatorio/ambientes/status', [Relatorio::class, 'showRelatorioAmbienteStatus']);//Lista as quantidades de status dos ambientes
     Route::get('/relatorio/reservas/status', [Relatorio::class, 'showRelatorioReservas']);//Lista as quantidades de status dos ambientes
-
+    
     //Ambientes
     Route::get('/ambientes', [AmbienteController::class, 'index']); // Listas Ambientes
     Route::get('/ambientes/{id}', [AmbienteController::class, 'show']); // Lista Ambiente por ID
@@ -39,8 +38,9 @@ Route::middleware(['auth.jwt'])->group(function () {
     
     
     //Usuarios
+    Route::get('/usuarios/ativos', [UsuarioController::class, 'indexEnableUser']); // Listar todos os usuários
+    Route::get('/usuarios/inativos', [UsuarioController::class, 'indexEnableUser']); // Listar todos os usuários
     Route::get('/usuarios', [UsuarioController::class, 'index']); // Listar todos os usuários
-    Route::put('/usuarios/desabilita/{id}', [UsuarioController::class, 'desable']); // Deletar um usuário
     Route::get('/usuarios/{id}', [UsuarioController::class, 'show']); // Mostrar um usuário específico
     Route::put('/usuarios/{id}', [UsuarioController::class, 'update']); // Atualizar um usuário existente
 
