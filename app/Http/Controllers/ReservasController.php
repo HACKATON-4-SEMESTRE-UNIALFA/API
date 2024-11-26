@@ -403,9 +403,37 @@ class ReservasController extends Controller
             ->where('status', 'Ativo')
             ->get();
 
+
+
+
         foreach ($reservas as $reserva) {
-            $reserva->status = 'confirmada';
+
+            $ambiente = Ambiente::find($reserva->id_ambiente);
+
+            $infoReserva = "{$ambiente->nome}, {$reserva->data}, {$reserva->horario}";
+
+            $reserva->status = 'Confirmada';
             $reserva->save();
+
+            $historico = HistoricoReserva::create([
+                'id_usuario' => $reserva->id_usuario,
+                'id_reserva' => $reserva->id,
+                'id_ambiente' => $reserva->id_ambiente,
+                'id_alteracao' => $reserva->id_usuario,
+                'data' => $reserva->data,
+                'horario' => $reserva->horario,
+                'status' => 'Confirmada',
+                'mensagem' => 'Reserva confirmada Automaticamente ',
+            ]);
+
+            $notificacao = Notificacao::create([
+                'id_reserva' => $reserva->id,
+                'infoReserva' => $infoReserva,
+                'tipo' => 'Confirmação',
+                'id_usuario' => $reserva->id_usuario,
+                'mensagem' => 'Sua reserva foi confirmada Automaticamente',
+                'visualizacao' => false
+            ]);
         }
 
         return response()->json([
@@ -413,6 +441,5 @@ class ReservasController extends Controller
             'message' => 'Reservas confirmadas com sucesso',
         ], 200);
     }
-
 }
 

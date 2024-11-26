@@ -24,18 +24,18 @@ Route::put('/usuarios/desabilita/{id}', [UsuarioController::class, 'desativar'])
 
 
 Route::middleware(['auth.jwt'])->group(function () {
-    
+
     //Relatorios
     Route::get('/relatorio/ambientes/status', [Relatorio::class, 'showRelatorioAmbienteStatus']);//Lista as quantidades de status dos ambientes
     Route::get('/relatorio/reservas/status', [Relatorio::class, 'showRelatorioReservas']);//Lista as quantidades de status dos ambientes
-    
+
     //Ambientes
     Route::get('/ambientes', [AmbienteController::class, 'index']); // Listas Ambientes
     Route::get('/ambientes/{id}', [AmbienteController::class, 'show']); // Lista Ambiente por ID
     Route::put('/ambientes/desabilita/{id}', [AmbienteController::class, 'desable']); //Desabilita o ambiente
     Route::get('/ambiente/disponivel', [AmbienteController::class, 'EnableAll']); //Mostra todos os ambientes disponiveis
-    
-    
+
+
     //Usuarios
     Route::get('/usuarios/ativos', [UsuarioController::class, 'indexEnableUser']); // Listar todos os usuários
     Route::get('/usuarios/inativos', [UsuarioController::class, 'indexEnableUser']); // Listar todos os usuários
@@ -63,7 +63,7 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::put('/reservas/ativa/{id}', [ReservasController::class, 'enable']); // Ativar uma reserva
     Route::put('/reservas/{id}', [ReservasController::class, 'update']); // Atualizar um reserva existente
     Route::get('/reservas/usuario/{id}', [ReservasController::class, 'showUserReserva']); // Atualizar um reserva existente
-    Route::put('/reserva/confirmada', [ReservasController::class, 'confirmaReserva']); // Atualizar as reservas para confirmadas
+    Route::put('/reserva/confirmada', [ReservasController::class, 'confirmaReservas']); // Atualizar as reservas para confirmadas
 
 
     //Historico de Reservas
