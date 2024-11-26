@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class BlackListController extends Controller
 {
-      /**
+    /**
      * Lista as datas da black list
      */
     public function index()
@@ -36,11 +36,15 @@ class BlackListController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
+            'data' => 'required|date_format:Y-m-d',
         ], [
+            'required' => 'O campo :attribute e obrigatorio',
+            'date_format' => 'O :attribute deve estar no formato correto: :format.',
         ], [
+            'data' => 'Data',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'error' => true,
                 'message' => 'Erro na validacao dos dados',
@@ -97,6 +101,24 @@ class BlackListController extends Controller
                 'message' => 'Data nao encontrada na white list',
             ], 404);
         }
+
+        $validator = Validator::make($request->all(), [
+            'data' => 'required|date_format:Y-m-d',
+        ], [
+            'required' => 'O campo :attribute e obrigatorio',
+            'date_format' => 'O :attribute deve estar no formato correto: :format.',
+        ], [
+            'data' => 'Data',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Erro na validacao dos dados',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
 
         $blackList->update($request->all());
 

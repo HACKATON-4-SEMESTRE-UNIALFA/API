@@ -138,7 +138,7 @@ class AmbienteController extends Controller
     /**
      * Edita o ambiente por id
      */
-    public function update(Request $request, $id, $id_alteracao)
+    public function update(Request $request, $id)
     {
 
         $ambiente = Ambiente::find($id);
@@ -182,25 +182,8 @@ class AmbienteController extends Controller
         }
 
         try {
-            $ambiente->nome = $request->input('nome');
-            $ambiente->capacidade = $request->input('capacidade');
-            $ambiente->status = $request->input('status');
-            $ambiente->equipamentos_disponiveis = $request->input('equipamentos_disponiveis');
-
-            if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
-
-                $path = $request->file('imagem')->store('imagens', 'public');
-                $nomeArquivo = basename($path);
-
-                $ambiente->update([
-                    'imagem' => $nomeArquivo
-                ]);
-            }
-
-            $ambiente->save();
 
             $ambienteStatus = $ambiente->status;
-
             if ($ambienteStatus !== 'Disponível') {
 
                 $reservas = Reservas::where('id_ambiente', $ambiente->id)
@@ -230,6 +213,22 @@ class AmbienteController extends Controller
                         NotificacaoController::store($reserva, $reserva->id_usuario, $tipo, $mensagem);
                     }
                 }
+            }
+
+            $ambiente->nome = $request->input('nome');
+            $ambiente->capacidade = $request->input('capacidade');
+            $ambiente->status = $request->input('status');
+            $ambiente->equipamentos_disponiveis = $request->input('equipamentos_disponiveis');
+            $ambiente->save();
+
+            if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
+
+                $path = $request->file('imagem')->store('imagens', 'public');
+                $nomeArquivo = basename($path);
+
+                $ambiente->update([
+                    'imagem' => $nomeArquivo
+                ]);
             }
 
             return response()->json([
@@ -267,7 +266,4 @@ class AmbienteController extends Controller
             'ambientes' => $ambientes
         ], 200);
     }
-
-
-    
 }
