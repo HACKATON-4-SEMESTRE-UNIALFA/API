@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use App\Models\Ambiente;
+use App\Models\HistoricoReserva;
+use App\Models\Reservas;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -29,10 +32,10 @@ class AmbienteController extends Controller
     }
 
 
-    public function showImage($dirname, $filename)
+    public function showImage($filename)
     {
 
-        $filePath = "{$dirname}/{$filename}";
+        $filePath = "/imagens/{$filename}";
 
         if (Storage::disk('public')->exists($filePath)) {
             return response()->file(Storage::disk('public')->path($filePath));
@@ -41,45 +44,44 @@ class AmbienteController extends Controller
         return response()->json(['error' => 'Imagem não encontrada'], 404);
     }
 
+
     /**
      * Cria um novo ambiente
      */
-    public function store(Request $request) //Adicionar parametro de imagem
+    public function store(Request $request)
     {
         $validator = Validator::make(
             $request->all(),
             [
                 'nome' => 'required|string',
                 'capacidade' => 'required|string',
-                'status' => 'required|string',
                 'equipamentos_disponiveis' => 'required|string',
                 'imagem' => 'required|image|mimes:jpeg,png,jpg,gif|max:20480',
+                'status' => 'required|in:Disponível,Indisponível,Manutenção',
             ],
             [
                 'required' => 'O campo :attribute e obrigatorio!',
                 'string' => 'O campo :attribute e string!',
+                'in' => 'O campo :attribute precisa ser Disponível,Indisponível ou Manutenção'
             ],
             [
                 'nome' => 'Nome',
                 'capacidade' => 'capacidade',
-                'status' => 'status',
                 'equipamentos_disponiveis' => 'equipamentos_disponiveis',
                 'imagem' => 'imagem',
-            ],
-            422
+            ]
         );
 
         if ($validator->fails()) {
             return response()->json([
                 'error' => true,
                 'message' => 'Erro na validacao dos dados',
-                'error' => $validator->error()
-            ], 422);
+                'error' => $validator->errors()
+            ], 200);
         }
 
-        // Verifica se o arquivo foi enviado corretamente
         if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
-            // Armazena o arquivo
+
             $path = $request->file('imagem')->store('imagens', 'public');
             $nomeArquivo = basename($path);
 
@@ -138,7 +140,7 @@ class AmbienteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Encontre o ambiente pelo ID
+
         $ambiente = Ambiente::find($id);
 
         if (!$ambiente) {
@@ -148,15 +150,14 @@ class AmbienteController extends Controller
             ], 404);
         }
 
-        // Validação dos dados recebidos
         $validator = Validator::make(
             $request->all(),
             [
                 'nome' => 'required|string',
                 'capacidade' => 'required|string',
-                'status' => 'required|string',
+                'status' => 'required|in:Disponível,Indisponível,Manutenção',
                 'equipamentos_disponiveis' => 'required|string',
-                'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480', // Imagem opcional
+                'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
             ],
             [
                 'required' => 'O campo :attribute é obrigatório!',
@@ -171,7 +172,7 @@ class AmbienteController extends Controller
             ]
         );
 
-        // Se houver erros de validação
+
         if ($validator->fails()) {
             return response()->json([
                 'error' => true,
@@ -181,29 +182,54 @@ class AmbienteController extends Controller
         }
 
         try {
-            // Atualiza os dados do ambiente
+
+            $ambienteStatus = $ambiente->status;
+            if ($ambienteStatus !== 'Disponível') {
+
+                $reservas = Reservas::where('id_ambiente', $ambiente->id)
+                    ->where('status', 'Ativo')
+                    ->get();
+
+                if (!$reservas->isEmpty()) {
+
+                    $usuarioAlteracao = Usuario::find($request->id_alteracao);
+
+                    foreach ($reservas as $reserva) {
+                        $reserva->status = 'Cancelado';
+                        $reserva->save();
+
+                        HistoricoReserva::create([
+                            'id_reserva' => $reserva->id,
+                            'id_alteracao' => $usuarioAlteracao->id,
+                            'id_usuario' => $reserva->id_usuario,
+                            'id_ambiente' => $reserva->id_ambiente,
+                            'horario' => $reserva->horario,
+                            'data' => $reserva->data,
+                            'status' => 'Cancelado'
+                        ]);
+
+                        $tipo = 'Cancelado';
+                        $mensagem = 'Reserva cancelada porque o ambiente ' . $ambiente->nome . ' está desativado.';
+                        NotificacaoController::store($reserva, $reserva->id_usuario, $tipo, $mensagem);
+                    }
+                }
+            }
+
             $ambiente->nome = $request->input('nome');
             $ambiente->capacidade = $request->input('capacidade');
             $ambiente->status = $request->input('status');
             $ambiente->equipamentos_disponiveis = $request->input('equipamentos_disponiveis');
+            $ambiente->save();
 
-            // Se uma nova imagem for enviada
             if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
-                // Deleta a imagem antiga, se existir
-                if ($ambiente->imagem) {
-                    Storage::disk('public')->delete('imagens/' . $ambiente->imagem);
-                }
 
-                // Armazena a nova imagem
                 $path = $request->file('imagem')->store('imagens', 'public');
                 $nomeArquivo = basename($path);
 
-                // Atualiza o campo de imagem
-                $ambiente->imagem = $nomeArquivo;
+                $ambiente->update([
+                    'imagem' => $nomeArquivo
+                ]);
             }
-
-            // Salva as alterações no banco de dados
-            $ambiente->save();
 
             return response()->json([
                 'error' => false,
@@ -221,23 +247,23 @@ class AmbienteController extends Controller
 
 
     /**
-     * Deleta usuario por id
+     * Lista todos os ambientes disponíveis
      */
-    public function destroy($id)
+    public function EnableAll()
     {
-        $ambiente = Ambiente::find($id);
-        if (!$ambiente) {
+        $ambientes = Ambiente::where('status', 'Disponível')->get();
+
+        if ($ambientes->isEmpty()) {
             return response()->json([
                 'error' => true,
-                'message' => 'Ambiente nao encontrado!',
+                'message' => 'Nenhum ambiente disponível encontrado!',
             ], 404);
         }
 
-        $ambiente->delete();
         return response()->json([
             'error' => false,
-            'message' => 'Ambiente nao encontrado',
-            'ambiente' => $ambiente
+            'message' => 'Ambientes disponíveis encontrados com sucesso!',
+            'ambientes' => $ambientes
         ], 200);
     }
 }

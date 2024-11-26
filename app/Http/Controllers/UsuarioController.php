@@ -69,6 +69,42 @@ class UsuarioController extends Controller
         ], 200);
     }
 
+    /**
+     *  Buscar todos os usuários ativos
+     */
+    public function indexEnableUser()
+    {
+        $usuarios = Usuario::where('isUser', 1)->get();
+        if ($usuarios->isEmpty()) {
+            return response()->json([
+                'error' => true,
+                "message" => "Nenhum usuario encontrado"
+            ], 404);
+        }
+        return response()->json([
+            'error' => false,
+            'usuario' => $usuarios
+        ], 200);
+    }
+
+    /**
+     *  Buscar todos os usuários ativos
+     */
+    public function indexDesableUser()
+    {
+        $usuarios = Usuario::where('isUser', 0)->get();
+        if ($usuarios->isEmpty()) {
+            return response()->json([
+                'error' => true,
+                "message" => "Nenhum usuario encontrado"
+            ], 404);
+        }
+        return response()->json([
+            'error' => false,
+            'usuario' => $usuarios
+        ], 200);
+    }
+
 
     /**
      * Tradando dados da requsição com o Validator antes de salvar no banco de dados.
@@ -136,7 +172,7 @@ class UsuarioController extends Controller
                 'email.unique' => 'O email informado já está cadastrado.',
                 'email.email' => 'O email informado deve estar no formato correto.',
                 'cpf.unique' => 'O CPF informado já está cadastrado.',
-                'cpf.size' => 'O Nome deve conter 11 caracteres no total',
+                'cpf.size' => 'O CPF deve conter 11 caracteres no total',
                 'confirmaSenha.same' => 'As senhas devem ser idênticas',
                 'password.min' => 'As senhas devem conter no minimo 7 caracteres',
                 'nome.min' => 'O nome deve conter no minimo 8 caracteres',
@@ -257,6 +293,8 @@ class UsuarioController extends Controller
                 ],
                 'confirmaSenha' => 'nullable|same:password',
                 'telefone' => 'required|string|max:15',
+                'isAdmin' => 'nullable|boolean',
+                'isUser' => 'nullable|boolean',
             ],
             [
                 'required' => 'O campo :attribute é obrigatório',
@@ -297,7 +335,9 @@ class UsuarioController extends Controller
             'nome' => $request->nome,
             'email' => $request->email,
             'password' => $request->password ? bcrypt($request->password) : $usuario->password,
-            'telefone' => $request->telefone
+            'telefone' => $request->telefone,
+            'isAdmin' => $request->isAdmin,
+            'isUser' => $request->isUser
         ]);
 
         return response()->json([
@@ -311,7 +351,7 @@ class UsuarioController extends Controller
     /**
      * Deleta o usuário pelo id
      */
-    public function destroy($id)
+    public function desativar($id)
     {
         $usuario = Usuario::find($id);
         if (!$usuario) {
@@ -321,10 +361,14 @@ class UsuarioController extends Controller
             ], 404);
         }
 
-        $usuario->delete();
+        $usuario->update([
+            'isAdmin' => false,
+            'isUser' => false,
+        ]);
+
         return response()->json([
             'error' => false,
-            'message' => 'Usuario deletado com sucesso',
+            'message' => 'Usuario desabilitado com sucesso',
             'usuario' => $usuario
         ], 200);
     }
