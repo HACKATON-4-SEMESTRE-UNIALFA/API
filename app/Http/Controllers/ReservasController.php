@@ -381,6 +381,8 @@ class ReservasController extends Controller
     {
         $reservas = Reservas::where('id_usuario', $id);
 
+        dd($reservas);  
+
         if (!$reservas) {
             return response()->json([
                 'error' => true,
@@ -391,7 +393,7 @@ class ReservasController extends Controller
         return response()->json([
             'error' => false,
             'message' => 'Historico de alteracao listado com sucesso',
-            'historico' => $reservas,
+            'reserva' => $reservas,
         ], 200);
     }
 
