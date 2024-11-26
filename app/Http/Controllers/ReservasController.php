@@ -373,13 +373,12 @@ class ReservasController extends Controller
         ]);
     }
 
-
     /**
      * Display the specified resource.
      */
     public function showUserReserva($id)
     {
-        $reservas = Reservas::where('id_usuario', $id);
+        $reservas = Reservas::where('id_usuario', $id)->get();
 
         if (!$reservas) {
             return response()->json([
@@ -390,7 +389,7 @@ class ReservasController extends Controller
 
         return response()->json([
             'error' => false,
-            'message' => 'Historico de alteracao listado com sucesso',
+            'message' => 'Reservas listadas com sucesso',
             'historico' => $reservas,
         ], 200);
     }
