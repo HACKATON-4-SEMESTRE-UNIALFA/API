@@ -20,6 +20,7 @@ Route::post('/usuarios', [UsuarioController::class, 'store']); // Criar um novo 
 Route::get('/imagens/{filename}', [AmbienteController::class, 'showImage']); //Retorna um file da imagem
 Route::post('/ambientes/{id}/usuario/{id_alteracao}', [AmbienteController::class, 'update']); //Edita o ambiente e salva quem fez a alteração
 Route::post('/ambientes', [AmbienteController::class, 'store']); //Cadastra novos ambientes
+Route::put('/usuarios/desabilita/{id}', [UsuarioController::class, 'desativar']); // Deletar um usuário
 
 
 Route::middleware(['auth.jwt'])->group(function () {
@@ -36,7 +37,6 @@ Route::middleware(['auth.jwt'])->group(function () {
     
     
     //Usuarios
-    Route::put('/usuarios/desabilita/{id}', [UsuarioController::class, 'desativar']); // Deletar um usuário
     Route::get('/usuarios/ativos', [UsuarioController::class, 'indexEnableUser']); // Listar todos os usuários
     Route::get('/usuarios/inativos', [UsuarioController::class, 'indexEnableUser']); // Listar todos os usuários
     Route::get('/usuarios', [UsuarioController::class, 'index']); // Listar todos os usuários
