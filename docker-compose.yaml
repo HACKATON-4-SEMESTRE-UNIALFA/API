@@ -1,0 +1,110 @@
+version: "3.9"
+
+networks:
+  hackaton_network:
+
+services:
+  # Serviço do Laravel
+#  server:
+#    build:
+#      context: .
+#      dockerfile: dockerfiles/nginx.dockerfile
+#    ports:
+#      - 8080:80
+#    volumes:
+#      - ./src:/var/www/html
+#      - ./dockerfiles/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+#    depends_on:
+#      - php
+#      - mysql
+#      - redis
+#      - mailhog
+#    container_name: hackaton_server
+#    networks:
+#      - hackaton_network
+
+  artisan:
+    build:
+      context: .
+      dockerfile: dockerfiles/php.dockerfile
+    volumes:
+      - ./:/var/www/html:delegated
+    working_dir: /var/www/html
+    command: >
+      sh -c "
+      php artisan migrate --force &&
+      php artisan serve --host=0.0.0.0 --port=8000
+      "
+    ports:
+      - "8000:8000"
+    networks:
+      - hackaton_network
+    depends_on:
+      - mysql
+
+  php:
+    build:
+      context: .
+      dockerfile: dockerfiles/php.dockerfile
+    volumes:
+      - ./:/var/www/html:delegated
+    container_name: php_hackaton
+    networks:
+      - hackaton_network
+
+  mysql:
+    image: mysql:8.0.1
+    restart: unless-stopped
+    container_name: mysql_hackaton
+    env_file:
+      - ./mysql/.env
+    ports:
+      - 3306:3306
+    volumes:
+      - /opt/mysql_data:/var/lib/mysql
+    networks:
+      - hackaton_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin_hackaton
+    depends_on:
+      - mysql
+    ports:
+      - 8891:80
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=secret
+    networks:
+      - hackaton_network
+
+  redis:
+    image: redis:alpine
+    container_name: redis_hackaton
+    ports:
+      - 6379:6379
+    networks:
+      - hackaton_network
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog_hackaton
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - hackaton_network
+
+  react:
+    build:
+      context: ../Page
+      dockerfile: Dockerfile
+    ports:
+      - 5173:5173
+    container_name: hackaton_react
+    volumes:
+      - ../Page:/usr/src/app
+    command: ["npm", "run", "dev", "--", "--host"]
+    networks:
+      - hackaton_network
