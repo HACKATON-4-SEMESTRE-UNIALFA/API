@@ -389,7 +389,7 @@ class ReservasController extends Controller
 
         return response()->json([
             'error' => false,
-            'message' => 'Reservas listadas com sucesso',
+            'message' => 'Historico de alteracao listado com sucesso',
             'historico' => $reservas,
         ], 200);
     }
