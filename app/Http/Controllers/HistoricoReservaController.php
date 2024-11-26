@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\HistoricoReserva;
+use App\Models\Reservas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class HistoricoReservaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Visualizar todas as reservas independente de usuario ou id reserva
      */
     public function index()
     {
@@ -29,66 +30,12 @@ class HistoricoReservaController extends Controller
         ], 200);
     }
 
-
     /**
-     * Store a newly created resource in storage.
-     */
-    public static function store($reservaAtual, $id)
-    {
-        $validator = Validator::make([
-            'id_reserva' => $id,
-            'ambienteAnterior' => strval($reservaAtual->id_ambiente),
-            'horarioAnterior' => $reservaAtual->horario,
-            'dataAnterior' => $reservaAtual->dia,
-            'statusAnterior' => $reservaAtual->status ?? false,
-        ], [
-            'id_reserva' => 'required|exists:reservas,id',
-            'ambienteAnterior' => 'required|string',
-            'horarioAnterior' => 'required|string',
-            'dataAnterior' => 'required|date_format:Y-m-d',
-            'statusAnterior' => 'required|boolean',
-
-        ], [
-            'required' => 'O campo :attribute e obrigatorio',
-            'exists' => 'O campo :attribute nao existe na tabela reservas.',
-            'string' => 'O campo :attribute deve ser string',
-            'date_format' => 'O campo :attribute deve estar no formato correto :format',
-            'boolean' => 'O campo :attribute deve ser booleano(true/false)',
-        ], [
-            'id_reserva' => 'ID Reserva',
-            'ambienteAnterior' => 'Ambiente Anterior',
-            'horarioAnteror' => 'Horario Anterior',
-            'dataAnteror' => 'Data Anterior',
-            'statusAnteror' => 'Status Anterior',
-        ], 422);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => true,
-                'message' => 'Erro na validacao dos dados do historico',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
-        $historico = HistoricoReserva::create([
-            'id_reserva' => $id,
-            'ambienteAnterior' => $reservaAtual->id_ambiente,
-            'horarioAnterior' => $reservaAtual->horario,
-            'dataAnterior' => $reservaAtual->dia,
-            'statusAnterior' => $reservaAtual->status ?? false,
-        ]);
-
-        return $historico;
-
-
-    }
-
-    /**
-     * Display the specified resource.
+     * Visualizar todas as alteracoes de uma reserva especifica
      */
     public function show($id)
     {
-        $historicoReserva = HistoricoReserva::find($id);
+        $historicoReserva = HistoricoReserva::all($id);
 
         if (!$historicoReserva) {
             return response()->json([
@@ -101,6 +48,72 @@ class HistoricoReservaController extends Controller
             'error' => false,
             'message' => 'Historico de alteracao listado com sucesso',
             'historico' => $historicoReserva,
+        ], 200);
+    }
+
+    /**
+     * Visualizar todas as alteracoes de historico de reservas de uma reserva especifica
+     */
+    public function showUser($id)
+    {
+        $historicoReserva = HistoricoReserva::with(['ambiente', 'alteracao'])
+            ->where('id_reserva', $id)
+            ->get();
+
+        if ($historicoReserva->isEmpty()) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Historico de alteracao nao encontrado',
+            ], 404);
+
+        }
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Histórico de alteração listado com sucesso',
+            'historico' => $historicoReserva->map(function ($item) {
+                return [
+                    'id_reserva' => $item->id_reserva,
+                    'nome_alteracao' => $item->alteracao->nome ?? 'Usuário não encontrado',
+                    'ambiente' => $item->ambiente->nome ?? 'Ambiente não encontrado',
+                    'horario' => $item->horario,
+                    'data' => $item->data,
+                    'status' => $item->status,
+                    'created_at' => $item->created_at,
+                ];
+            }),
+        ], 200);
+    }
+
+    /**
+     * Visualizar todas as alteracoes de historico de reservas de uma reserva especifica
+     */
+    public function showReservaUser($id)
+    {
+        $historicoReserva = HistoricoReserva::where('id_reserva', $id)->get();
+
+        if ($historicoReserva->isEmpty()) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Historico de alteracao nao encontrado',
+            ], 404);
+
+        }
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Histórico de alteração listado com sucesso',
+            'historico' => $historicoReserva->map(function ($item) {
+                return [
+                    'id_reserva' => $item->id_reserva,
+                    'nome_alteracao' => $item->alteracao->nome ?? 'Usuário não encontrado',
+                    'ambiente' => $item->ambiente->nome ?? 'Ambiente não encontrado',
+                    'horario' => $item->horario,
+                    'data' => $item->data,
+                    'status' => $item->status,
+                    'created_at' => $item->created_at,
+                ];
+            }),
         ], 200);
     }
 }

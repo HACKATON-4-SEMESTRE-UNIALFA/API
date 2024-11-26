@@ -11,21 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ambientes', function (Blueprint $table) {
+        Schema::create('white_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
-            $table->string('capacidade');
-            $table->string('status');
-            $table->string('equipamentos_disponiveis');
-            $table->string('imagem');
+            $table->string('data');
             $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('ambientes');
+        Schema::dropIfExists('white_lists');
     }
 };

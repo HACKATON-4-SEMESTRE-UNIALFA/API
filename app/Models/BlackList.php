@@ -5,22 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class HorarioFuncionamento extends Model
+class BlackList extends Model
 {
     use HasFactory;
 
 
     protected $fillable = [
-        'id_ambiente',
-        'horario',
+        'data',
     ];
-
-    public function amiente()
-    {
-        return $this->belongsTo(Ambiente::class);
-    }
-
-
 }
-
-

@@ -5,27 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Reservas extends Model
+class Notificacao extends Model
 {
     use HasFactory;
 
-
     protected $fillable = [
+        'id_reserva',
         'id_usuario',
-        'id_ambiente',
-        'horario',
-        'data',
-        'status',
+        'infoReserva',
+        'tipo',
+        'mensagem',
+        'visualizacao',
     ];
 
-    public function ambiente()
+    public function reserva()
     {
-        return $this->belongsTo(Ambiente::class);
+        return $this->belongsTo(Reservas::class);
     }
-    
+
     public function usuario()
     {
         return $this->belongsTo(Usuario::class);
     }
-    
 }

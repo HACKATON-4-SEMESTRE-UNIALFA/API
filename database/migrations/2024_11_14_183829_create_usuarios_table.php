@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("nome");
             $table->string("email")->unique()->nullable();
-            $table->string("senha");
+            $table->string("password");
             $table->string("telefone")->nullable();
             $table->string("cpf")->unique();
             $table->boolean("isAdmin")->default(false);

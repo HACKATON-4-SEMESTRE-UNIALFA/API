@@ -12,15 +12,32 @@ class HistoricoReserva extends Model
 
     protected $fillable = [
         'id_reserva',
-        'ambienteAnterior',
-        'horarioAnterior',
-        'dataAnterior',
-        'statusAnterior',
+        'id_usuario',
+        'id_ambiente',
+        'id_alteracao',
+        'horario',
+        'data',
+        'status',
     ];
 
 
     public function reserva()
     {
         return $this->belongsTo(Reservas::class);
+    }
+
+    public function ambiente()
+    {
+        return $this->belongsTo(Ambiente::class ,'id_ambiente');
+    }
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'id_usuario');
+    }
+
+    public function alteracao()
+    {
+        return $this->belongsTo(Usuario::class, 'id_alteracao');
     }
 }

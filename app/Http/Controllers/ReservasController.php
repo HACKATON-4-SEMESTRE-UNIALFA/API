@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ambiente;
+use App\Models\HistoricoReserva;
 use App\Models\HorarioFuncionamento;
+use App\Models\Notificacao;
 use App\Models\Reservas;
 use App\Models\Usuario;
+use Faker\Core\Number;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,7 +31,7 @@ class ReservasController extends Controller
         return response()->json([
             'error' => false,
             'message' => 'Reservas listadas com sucesso',
-            'reservas' => $reserva
+            'reserva' => $reserva
         ], 200);
     }
 
@@ -43,7 +46,7 @@ class ReservasController extends Controller
                 'id_usuario' => 'required|exists:usuarios,id',
                 'id_ambiente' => 'required|exists:ambientes,id',
                 'horario' => 'required|string',
-                'dia' => 'required|date_format:Y-m-d',
+                'data' => 'required|date_format:Y-m-d',
             ],
             [
                 'required' => 'O campo :attribute e obrigatorio',
@@ -55,7 +58,7 @@ class ReservasController extends Controller
             [
                 'id_ambiente' => 'Id Ambiente',
                 'id_usuario' => 'Id Usuario',
-                'dia' => 'Dia',
+                'data' => 'data',
                 'horario' => 'Horario',
             ],
             422
@@ -73,13 +76,27 @@ class ReservasController extends Controller
             'id_usuario' => $request->input('id_usuario'),
             'id_ambiente' => $request->input('id_ambiente'),
             'horario' => $request->input('horario'),
-            'dia' => $request->input('dia'),
+            'data' => $request->input('data'),
+            'status' => 'Ativo'
         ]);
+
+
+        $historicoOk = HistoricoReserva::create([
+            'id_usuario' => $request->input('id_usuario'),
+            'id_ambiente' => $request->input('id_ambiente'),
+            'id_reserva' => $reserva->id,
+            'id_alteracao' => $request->input('id_usuario'),
+            'horario' => $request->input('horario'),
+            'data' => $request->input('data'),
+            'status' => 'Ativo'
+        ]);
+
 
         return response()->json([
             'error' => false,
             'message' => 'Reserva cadastrada com sucesso!',
-            'reserva' => $reserva
+            'reserva' => $reserva,
+            'historico' => $historicoOk,
         ], 201);
     }
 
@@ -109,25 +126,24 @@ class ReservasController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $validator = Validator::make(
             $request->all(),
             [
-                'id_usuario' => 'required|exists:usuarios,id',
                 'id_ambiente' => 'required|exists:ambientes,id',
+                'id_alteracao' => 'required|integer',
                 'horario' => 'required|string',
-                'dia' => 'required|date_format:Y-m-d',
+                'data' => 'required|date_format:Y-m-d',
             ],
             [
                 'required' => 'O campo :attribute e obrigatorio',
-                'id_usuario.exists' => 'O :attribute informado nao existe na tabela usuarios',
                 'id_ambientes.exists' => 'O :attribute informado nao existe na tabela ambientes',
                 'date_format' => 'O :attribute deve estar no formato correto: :format.',
                 'string' => 'O :attribute deve ser string',
             ],
             [
                 'id_ambiente' => 'Id Ambiente',
-                'id_usuario' => 'Id Usuario',
-                'dia' => 'Dia',
+                'data' => 'data',
                 'horario' => 'Horario',
             ],
             422
@@ -141,35 +157,63 @@ class ReservasController extends Controller
             ], 404);
         }
 
-        /**
-         * Sempre quando for atualizar alguma info na reserva
-         * salvar os dados atuais da reserva no historico atraves
-         * do metodo static store do historico
-         */
+        $usuarioAlteracao = Usuario::find($request->id_alteracao);
+        if (!$usuarioAlteracao) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Não foi possivel encontrar usuario que esta solicitando alteração'
+            ], 500);
+        }
+
+        $tipo = 'Alteração';
+        $mensagem = 'Reserva alterada por ' . $usuarioAlteracao->nome;
+
         $reservaAtual = Reservas::find($id);
-        $historicoReserva = HistoricoReservaController::store($reservaAtual, $id);
-        
+
+        if (!$reservaAtual) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Nenhuma reserva encontrada',
+            ]);
+        }
+
+
+        $notificaAlteracao = NotificacaoController::store($reservaAtual, $reservaAtual->id_usuario, $tipo, $mensagem);
+
+        $historico = HistoricoReserva::create([
+            'id_reserva' => $reservaAtual->id,
+            'id_alteracao' => $request->id_alteracao,
+            'id_usuario' => $reservaAtual->id_usuario,
+            'id_ambiente' => $request->input('id_ambiente'),
+            'horario' => $request->input('horario'),
+            'data' => $request->input('data'),
+            'status' => $reservaAtual->status
+        ]);
+
 
         $reservaAtual->update([
-            'id_usuario' => $request->id_usuario,
+            'id_usuario' => $reservaAtual->id_usuario,
             'id_ambiente' => $request->id_ambiente,
             'horario' => $request->horario,
-            'dia' => $request->dia,
+            'data' => $request->data,
+            'status' => $reservaAtual->status
         ]);
 
         return response()->json([
             'error' => false,
             'message' => 'Reserva editada com sucesso!',
-            'reservaAtual' => $reservaAtual,
-            'Atualizacao do Historico' => $historicoReserva,
+            'reserva' => $reservaAtual,
+            'historico' => $historico,
+            'notificacao' => $notificaAlteracao,
         ], 201);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Desabilita o status da deserva (altera para cancelado)
      */
-    public function desabilita($id)
+    public function desable(Request $request, $id, $id_alteracao)
     {
+
         $reserva = Reservas::find($id);
 
         if (!$reserva) {
@@ -179,71 +223,76 @@ class ReservasController extends Controller
             ], 404);
         }
 
-        $reserva->update([
-            'statusReserva' => false,
-        ]);
-
-        return response()->json([
-            'error' => false,
-            'message' => 'Reserva desabilitada',
-            'reserva' => $reserva
-        ], 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        $reserva = Reservas::find($id);
-
-        if (!$reserva) {
-            return response()->json([
-                'error' => true,
-                'message' => 'Nenhum reserva encontrada'
-            ], 404);
-        }
-
-        $reserva->delete($id);
-
-        return response()->json([
-            'error' => false,
-            'message' => 'Reserva deletada',
-            'reserva' => $reserva
-        ], 200);
-    }
-
-
-    /**
-     * 
-     */
-    public function verificaReserva(Request $request)
-    {
-
+        //Tratar request
         $validator = Validator::make(
             $request->all(),
             [
-                'id_ambiente' => 'required|exists:ambientes,id',
+                'mensagem' => 'required|string|max:100',
             ],
             [
                 'required' => 'O campo :attribute e obrigatorio',
-                'id_ambientes.exists' => 'O :attribute informado nao existe na tabela ambientes',
+                'strin' => 'O campo :attribute e string',
+                'max' => 'O campo :attribute deve conter no maximo 100 caracteres',
             ],
             [
-                'id_ambiente' => 'Id Ambiente',
-            ],
-            422
+                'mensagem' => 'Mensagem',
+            ]
         );
-
 
         if ($validator->fails()) {
             return response()->json([
                 'error' => true,
-                'message' => 'Erro na validacao dos dados',
-            ], 404);
+                'message' => 'Erro na validacao de dados',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
-        $ambiente = Ambiente::find($request->id_ambiente);
+        $usuarioAlteracao = Usuario::find($request->id_alteracao);
+        if (!$usuarioAlteracao) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Não foi possivel encontrar usuario que esta solicitando alteração'
+            ], 500);
+        }
+
+        $tipo = 'Cancelado';
+        $mensagem = $request->mensagem . ', Cancelado por: ' . $usuarioAlteracao->nome;
+
+
+
+        $notificaAlteracao = NotificacaoController::store($reserva, $reserva->id_usuario, $tipo, $mensagem);
+
+        $historico = HistoricoReserva::create([
+            'id_reserva' => $reserva->id,
+            'id_alteracao' => $id_alteracao,
+            'id_usuario' => $reserva->id_usuario,
+            'id_ambiente' => $reserva->id_ambiente,
+            'horario' => $reserva->horario,
+            'data' => $reserva->data,
+            'status' => 'cancelado'
+        ]);
+
+        $reserva->update([
+            'status' => 'Cancelado'
+        ]);
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Reserva cancelada',
+            'reserva' => $reserva,
+            'notificacao' => $notificaAlteracao,
+            'historico' => $historico
+        ], 200);
+    }
+
+
+    /**
+     * Retorna os dias que estao com todos os horarios de funcionamento preenchidos
+     */
+    public function verificaReservaDia($id)
+    {
+        $idInt = (int)$id;
+        $ambiente = Ambiente::find($idInt);
 
         if (!$ambiente) {
             return response()->json([
@@ -252,24 +301,118 @@ class ReservasController extends Controller
             ], 404);
         }
 
-        //Busca o horario disponivel daquele ambiente
-        $horarioFuncionamento = HorarioFuncionamento::where('id_ambiente', $request->id_ambiente)->get();
-
-        // Busca todas as reservas ativas no id do ambiente
-        $reservas = Reservas::where('statusReserva', 1)
-            ->where('id_ambiente', $request->id_ambiente)
+        $horariosFuncionamento = HorarioFuncionamento::where('id_ambiente', $idInt)
             ->pluck('horario')
             ->toArray();
 
-        $horariosDisponiveis = $horarioFuncionamento->filter(function ($horarioFunciona) use ($reservas) {
-            return !in_array($horarioFunciona->horario, $reservas);
-        });
 
+        $reservas = Reservas::where('id_ambiente', $idInt)
+            ->where('status', 'Ativo')
+            ->get();
+
+        $reservasPorData = $reservas->groupBy('data');
+
+        $diasCompletos = [];
+        foreach ($reservasPorData as $data => $reservasDoDia) {
+            $horariosReservados = $reservasDoDia->pluck('horario')->toArray();
+            if (empty(array_diff($horariosFuncionamento, $horariosReservados))) {
+                $diasCompletos[] = $data;
+            }
+        }
+
+        if (!$diasCompletos) {
+            return response()->json([
+                'Todos os dias estao liberados'
+            ]);
+        }
+
+        return response()->json([
+            'idAmbiente' => $ambiente->id,
+            'nomeAmbiente' => $ambiente->nome,
+            'diasOcupados' => $diasCompletos,
+        ]);
+    }
+
+    /**
+     * Retorna os horarios de funcionamento ocupados de dias parcialmente preenchidos
+     */
+    public function verificaReservaHorario($id, $data)
+    {
+        $idInt = (int)$id;
+        $ambiente = Ambiente::find($idInt);
+
+        if (!$ambiente) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Ambiente não encontrado'
+            ], 404);
+        }
+
+        $horariosFuncionamento = HorarioFuncionamento::where('id_ambiente', $idInt)
+            ->pluck('horario')
+            ->toArray();
+
+        $reservasDoDia = Reservas::where('id_ambiente', $idInt)
+            ->where('status', 'Ativo')
+            ->where('data', $data)
+            ->pluck('horario')
+            ->toArray();
+
+        $horariosDisponiveis = array_diff($horariosFuncionamento, $reservasDoDia);
+
+        if (empty($horariosDisponiveis)) {
+            return response()->json([
+                'Todos os horários estão ocupados para esta data'
+            ]);
+        }
+
+        return response()->json([
+            'nomeAmbiente' => $ambiente->nome,
+            'data' => $data,
+            'horariosDisponiveis' => $horariosDisponiveis,
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function showUserReserva($id)
+    {
+        $reservas = Reservas::where('id_usuario', $id)->get();
+
+        if (!$reservas) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Historico de alteracao nao encontrado',
+            ], 404);
+        }
 
         return response()->json([
             'error' => false,
-            'message' => 'Horarios disponiveis',
-            'horarios' => $horariosDisponiveis->values()
+            'message' => 'Historico de alteracao listado com sucesso',
+            'historico' => $reservas,
         ], 200);
     }
+
+    /**
+     * Atualiza as reservas que passaram do dia atual
+     */
+    public function confirmaReservas()
+    {
+        $reservas = Reservas::where('data', '<', date('Y-m-d'))
+            ->where('status', 'Ativo')
+            ->get();
+
+        foreach ($reservas as $reserva) {
+            $reserva->status = 'confirmada';
+            $reserva->save();
+        }
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Reservas confirmadas com sucesso',
+        ], 200);
+    }
+
 }
+

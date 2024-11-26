@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\usuario;
 use App\Models\Usuario as ModelsUsuario;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,30 +15,32 @@ class UsuarioController extends Controller
 
     /**
      * Verifica se o email passado na request existe no banco
-     * apos verificado compara a senha do banco com a senha da
+     * apos verificado compara a password do banco com a password da
      * request, se todos os valores estiverem certos gera o token
      */
     public function login(Request $request)
     {
-
+        // Validação dos dados recebidos
         $request->validate([
             'email' => 'required|email',
-            'senha' => 'required',
+            'password' => 'required',
         ]);
 
+        // Busca o usuário pelo e-mail
         $usuario = Usuario::where('email', $request->email)->first();
 
-
-        if (!$usuario || !Hash::check($request->senha, $usuario->senha)) {
+        // Verifica se o usuário existe e se a password está correta
+        if (!$usuario || !Hash::check($request->password, $usuario->password)) {
             return response()->json([
                 'error' => true,
                 'message' => 'Credenciais inválidas'
             ], 401);
         }
 
+        // Gera o token JWT
+        $token = JWTAuth::fromUser($usuario);
 
-
-        $token = $usuario->createToken('auth_token')->plainTextToken;
+        // Retorna o token e os dados do usuário
         return response()->json([
             'error' => false,
             'message' => 'Login realizado com sucesso',
@@ -45,6 +48,7 @@ class UsuarioController extends Controller
             'usuario' => $usuario
         ], 200);
     }
+
 
 
     /**
@@ -61,7 +65,43 @@ class UsuarioController extends Controller
         }
         return response()->json([
             'error' => false,
-            'Dados dos Usuarios' => [$usuarios]
+            'usuario' => $usuarios
+        ], 200);
+    }
+
+    /**
+     *  Buscar todos os usuários ativos
+     */
+    public function indexEnableUser()
+    {
+        $usuarios = Usuario::where('isUser', 1)->get();
+        if ($usuarios->isEmpty()) {
+            return response()->json([
+                'error' => true,
+                "message" => "Nenhum usuario encontrado"
+            ], 404);
+        }
+        return response()->json([
+            'error' => false,
+            'usuario' => $usuarios
+        ], 200);
+    }
+
+    /**
+     *  Buscar todos os usuários ativos
+     */
+    public function indexDesableUser()
+    {
+        $usuarios = Usuario::where('isUser', 0)->get();
+        if ($usuarios->isEmpty()) {
+            return response()->json([
+                'error' => true,
+                "message" => "Nenhum usuario encontrado"
+            ], 404);
+        }
+        return response()->json([
+            'error' => false,
+            'usuario' => $usuarios
         ], 200);
     }
 
@@ -98,30 +138,30 @@ class UsuarioController extends Controller
                         }
                     }
                 ],
-                'senha' => [
+                'password' => [
                     'required',
                     'string',
                     'min:7',
                     function ($attribute, $value, $fail) {
                         // Verifica maiusculas
                         if (!preg_match('/[A-Z]/', $value)) {
-                            $fail("A senha deve conter pelo menos uma letra maiúscula.");
+                            $fail("A password deve conter pelo menos uma letra maiúscula.");
                         }
                         // Verifica minusculas
                         if (!preg_match('/[a-z]/', $value)) {
-                            $fail("A senha deve conter pelo menos uma letra minúscula.");
+                            $fail("A password deve conter pelo menos uma letra minúscula.");
                         }
                         // Verifica os numericos
                         if (!preg_match('/\d/', $value)) {
-                            $fail("A senha deve conter pelo menos um número.");
+                            $fail("A password deve conter pelo menos um número.");
                         }
                         // Verifica caracteres especiais
                         if (!preg_match('/[@$!%*?&]/', $value)) {
-                            $fail("A senha deve conter pelo menos um caractere especial.");
+                            $fail("A password deve conter pelo menos um caractere especial.");
                         }
                     }
                 ],
-                'confirmaSenha' => 'required|same:senha',
+                'confirmaSenha' => 'required|same:password',
                 'telefone' => 'required|string|max:15',
                 'cpf' => 'required|string|size:11|unique:usuarios,cpf',
             ],
@@ -132,16 +172,16 @@ class UsuarioController extends Controller
                 'email.unique' => 'O email informado já está cadastrado.',
                 'email.email' => 'O email informado deve estar no formato correto.',
                 'cpf.unique' => 'O CPF informado já está cadastrado.',
-                'cpf.size' => 'O Nome deve conter 11 caracteres no total',
+                'cpf.size' => 'O CPF deve conter 11 caracteres no total',
                 'confirmaSenha.same' => 'As senhas devem ser idênticas',
-                'senha.min' => 'As senhas devem conter no minimo 7 caracteres',
+                'password.min' => 'As senhas devem conter no minimo 7 caracteres',
                 'nome.min' => 'O nome deve conter no minimo 8 caracteres',
                 'telefone.max' => 'Telefone de conter no maximo 15 caracteres',
             ],
             [
                 'nome' => 'Nome',
                 'email' => 'Email',
-                'senha' => 'Senha',
+                'password' => 'Senha',
                 'confirmaSenha' => 'Confirma Senha',
                 'telefone' => 'Telefone',
                 'cpf' => 'CPF'
@@ -162,9 +202,10 @@ class UsuarioController extends Controller
         $usuario = Usuario::create([
             'nome' => $request->input('nome'),
             'email' => $request->input('email'),
-            'senha' => bcrypt($request->input('senha')),
+            'password' => bcrypt($request->input('password')),
             'telefone' => $request->input('telefone'),
             'cpf' => $request->input('cpf'),
+            'isAdmin' => $request->input('isAdmin'),
             'isUser' => true
         ]);
 
@@ -225,33 +266,35 @@ class UsuarioController extends Controller
                         }
                     }
                 ],
-                'senha' => [
+                'password' => [
                     'nullable', // Senha não é obrigatória no update, a menos que seja fornecida
                     'string',
                     'min:7',
                     function ($attribute, $value, $fail) {
-                        if ($value) { // Só valida se a senha foi fornecida
+                        if ($value) { // Só valida se a password foi fornecida
                             // Verifica maiúsculas
                             if (!preg_match('/[A-Z]/', $value)) {
-                                $fail("A senha deve conter pelo menos uma letra maiúscula.");
+                                $fail("A password deve conter pelo menos uma letra maiúscula.");
                             }
                             // Verifica minúsculas
                             if (!preg_match('/[a-z]/', $value)) {
-                                $fail("A senha deve conter pelo menos uma letra minúscula.");
+                                $fail("A password deve conter pelo menos uma letra minúscula.");
                             }
                             // Verifica os números
                             if (!preg_match('/\d/', $value)) {
-                                $fail("A senha deve conter pelo menos um número.");
+                                $fail("A password deve conter pelo menos um número.");
                             }
                             // Verifica caracteres especiais
                             if (!preg_match('/[@$!%*?&]/', $value)) {
-                                $fail("A senha deve conter pelo menos um caractere especial.");
+                                $fail("A password deve conter pelo menos um caractere especial.");
                             }
                         }
                     }
                 ],
-                'confirmaSenha' => 'nullable|same:senha',
+                'confirmaSenha' => 'nullable|same:password',
                 'telefone' => 'required|string|max:15',
+                'isAdmin' => 'nullable|boolean',
+                'isUser' => 'nullable|boolean',
             ],
             [
                 'required' => 'O campo :attribute é obrigatório',
@@ -259,13 +302,13 @@ class UsuarioController extends Controller
                 'email.unique' => 'O email informado já está cadastrado.',
                 'email.email' => 'O email informado deve estar no formato correto.',
                 'confirmaSenha.same' => 'As senhas devem ser idênticas.',
-                'senha.min' => 'A senha deve conter no mínimo 7 caracteres.',
+                'password.min' => 'A password deve conter no mínimo 7 caracteres.',
                 'telefone.max' => 'O telefone deve conter no máximo 15 caracteres.',
             ],
             [
                 'nome' => 'Nome',
                 'email' => 'Email',
-                'senha' => 'Senha',
+                'password' => 'Senha',
                 'confirmaSenha' => 'Confirma Senha',
                 'telefone' => 'Telefone',
             ]
@@ -291,14 +334,16 @@ class UsuarioController extends Controller
         $usuario->update([
             'nome' => $request->nome,
             'email' => $request->email,
-            'senha' => $request->senha ? bcrypt($request->senha) : $usuario->senha,
-            'telefone' => $request->telefone
+            'password' => $request->password ? bcrypt($request->password) : $usuario->password,
+            'telefone' => $request->telefone,
+            'isAdmin' => $request->isAdmin,
+            'isUser' => $request->isUser
         ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Usuário atualizado com sucesso.',
-            'data' => $usuario
+            'usuario' => $usuario
         ], 200);
     }
 
@@ -306,7 +351,7 @@ class UsuarioController extends Controller
     /**
      * Deleta o usuário pelo id
      */
-    public function destroy($id)
+    public function desativar($id)
     {
         $usuario = Usuario::find($id);
         if (!$usuario) {
@@ -316,11 +361,15 @@ class UsuarioController extends Controller
             ], 404);
         }
 
-        $usuario->delete();
+        $usuario->update([
+            'isAdmin' => false,
+            'isUser' => false,
+        ]);
+
         return response()->json([
             'error' => false,
-            'message' => 'Usuario deletado com sucesso',
-            'Dados deletados' => [$usuario]
+            'message' => 'Usuario desabilitado com sucesso',
+            'usuario' => $usuario
         ], 200);
     }
 }
