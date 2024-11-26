@@ -69,6 +69,42 @@ class UsuarioController extends Controller
         ], 200);
     }
 
+    /**
+     *  Buscar todos os usuários ativos
+     */
+    public function indexEnableUser()
+    {
+        $usuarios = Usuario::where('isUser', 1)->get();
+        if ($usuarios->isEmpty()) {
+            return response()->json([
+                'error' => true,
+                "message" => "Nenhum usuario encontrado"
+            ], 404);
+        }
+        return response()->json([
+            'error' => false,
+            'usuario' => $usuarios
+        ], 200);
+    }
+
+    /**
+     *  Buscar todos os usuários ativos
+     */
+    public function indexDesableUser()
+    {
+        $usuarios = Usuario::where('isUser', 0)->get();
+        if ($usuarios->isEmpty()) {
+            return response()->json([
+                'error' => true,
+                "message" => "Nenhum usuario encontrado"
+            ], 404);
+        }
+        return response()->json([
+            'error' => false,
+            'usuario' => $usuarios
+        ], 200);
+    }
+
 
     /**
      * Tradando dados da requsição com o Validator antes de salvar no banco de dados.
@@ -329,6 +365,7 @@ class UsuarioController extends Controller
             'isAdmin' => false,
             'isUser' => false,
         ]);
+
         return response()->json([
             'error' => false,
             'message' => 'Usuario desabilitado com sucesso',

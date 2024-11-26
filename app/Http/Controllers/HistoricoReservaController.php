@@ -84,4 +84,36 @@ class HistoricoReservaController extends Controller
             }),
         ], 200);
     }
+
+    /**
+     * Visualizar todas as alteracoes de historico de reservas de uma reserva especifica
+     */
+    public function showReservaUser($id)
+    {
+        $historicoReserva = HistoricoReserva::where('id_reserva', $id)->get();
+
+        if ($historicoReserva->isEmpty()) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Historico de alteracao nao encontrado',
+            ], 404);
+
+        }
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Histórico de alteração listado com sucesso',
+            'historico' => $historicoReserva->map(function ($item) {
+                return [
+                    'id_reserva' => $item->id_reserva,
+                    'nome_alteracao' => $item->alteracao->nome ?? 'Usuário não encontrado',
+                    'ambiente' => $item->ambiente->nome ?? 'Ambiente não encontrado',
+                    'horario' => $item->horario,
+                    'data' => $item->data,
+                    'status' => $item->status,
+                    'created_at' => $item->created_at,
+                ];
+            }),
+        ], 200);
+    }
 }

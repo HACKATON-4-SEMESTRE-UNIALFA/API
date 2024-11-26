@@ -37,6 +37,8 @@ Route::middleware(['auth.jwt'])->group(function () {
 
 
     //Usuarios
+    Route::get('/usuarios/ativos', [UsuarioController::class, 'indexEnableUser']); // Listar todos os usuários
+    Route::get('/usuarios/inativos', [UsuarioController::class, 'indexEnableUser']); // Listar todos os usuários
     Route::get('/usuarios', [UsuarioController::class, 'index']); // Listar todos os usuários
     Route::put('/usuarios/desabilita/{id}', [UsuarioController::class, 'desable']); // Deletar um usuário
     Route::get('/usuarios/{id}', [UsuarioController::class, 'show']); // Mostrar um usuário específico
@@ -68,7 +70,7 @@ Route::middleware(['auth.jwt'])->group(function () {
     //Historico de Reservas
     Route::get('/reserva/historico', [HistoricoReservaController::class, 'index']); // Listar todos os reservas
     Route::get('/reserva/historico/{id}', [HistoricoReservaController::class, 'show']); // Mostrar um reserva específico
-    Route::get('/reserva/{id}/historico', [HistoricoReservaController::class, 'showUser']); // Mostrar um reserva específico
+    Route::get('/reserva/{id}/historico', [HistoricoReservaController::class, 'showReservaUser']); // Mostrar um reserva específico
 
 
     //Notificacao

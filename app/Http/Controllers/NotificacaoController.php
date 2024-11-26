@@ -128,6 +128,7 @@ class NotificacaoController extends Controller
 
         $notificacoes = Notificacao::where('id_usuario', $id)->get();
 
+
         if ($notificacoes->isEmpty()) {
             return response()->json([
                 'error' => false,
@@ -138,7 +139,7 @@ class NotificacaoController extends Controller
         return response()->json([
             'error' => false,
             'message' => 'Todas as notificações foram marcadas como visualizadas',
-            'notificacao' => $notificacoes->count(),
+            'notificacao' => $notificacoes,
         ], 200);
     }
 
