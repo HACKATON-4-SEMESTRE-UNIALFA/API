@@ -7,6 +7,7 @@ use App\Http\Controllers\BlackListController;
 use App\Http\Controllers\HistoricoReservaController;
 use App\Http\Controllers\HorarioFuncionamentoController;
 use App\Http\Controllers\NotificacaoController;
+use App\Http\Controllers\Relatorio;
 use App\Http\Controllers\ReservasController;
 use App\Http\Controllers\WhiteListController;
 
@@ -19,11 +20,14 @@ Route::post('/usuarios', [UsuarioController::class, 'store']); // Criar um novo 
 Route::get('/imagens/{filename}', [AmbienteController::class, 'showImage']); //Retorna um file da imagem
 Route::post('/ambientes/{id}/usuario/{id_alteracao}', [AmbienteController::class, 'update']); //Edita o ambiente e salva quem fez a alteração
 Route::post('/ambientes', [AmbienteController::class, 'store']); //Cadastra novos ambientes
-Route::post('/imagens/{id}', [AmbienteController::class, 'storeImage']); //Retorna um file da imagem
 
 
 
 Route::middleware(['auth.jwt'])->group(function () {
+
+    //Relatorios
+    Route::get('/relatorio/ambientes/status', [Relatorio::class, 'showRelatorioAmbienteStatus']);//Lista as quantidades de status dos ambientes
+    Route::get('/relatorio/reservas/status', [Relatorio::class, 'showRelatorioReservas']);//Lista as quantidades de status dos ambientes
 
     //Ambientes
     Route::get('/ambientes', [AmbienteController::class, 'index']); // Listas Ambientes
@@ -58,6 +62,7 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::put('/reservas/ativa/{id}', [ReservasController::class, 'enable']); // Ativar uma reserva
     Route::put('/reservas/{id}', [ReservasController::class, 'update']); // Atualizar um reserva existente
     Route::get('/reservas/usuario/{id}', [ReservasController::class, 'showUserReserva']); // Atualizar um reserva existente
+    Route::put('/reserva/confirmada', [ReservasController::class, 'confirmaReserva']); // Atualizar as reservas para confirmadas
 
 
     //Historico de Reservas

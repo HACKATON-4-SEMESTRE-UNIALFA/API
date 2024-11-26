@@ -394,4 +394,26 @@ class ReservasController extends Controller
             'historico' => $reservas,
         ], 200);
     }
+
+    /**
+     * Atualiza as reservas que passaram do dia atual
+     */
+    public function confirmaReservas()
+    {
+        $reservas = Reservas::where('data', '<', date('Y-m-d'))
+            ->where('status', 'ativo')
+            ->get();
+
+        foreach ($reservas as $reserva) {
+            $reserva->status = 'confirmada';
+            $reserva->save();
+        }
+
+        return response()->json([
+            'error' => false,
+            'message' => 'Reservas confirmadas com sucesso',
+        ], 200);
+    }
+
 }
+
