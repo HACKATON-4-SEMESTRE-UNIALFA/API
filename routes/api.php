@@ -63,7 +63,7 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::put('/reservas/ativa/{id}', [ReservasController::class, 'enable']); // Ativar uma reserva
     Route::put('/reservas/{id}', [ReservasController::class, 'update']); // Atualizar um reserva existente
     Route::get('/reservas/usuario/{id}', [ReservasController::class, 'showUserReserva']); // Atualizar um reserva existente
-    Route::put('/reserva/confirmada', [ReservasController::class, 'confirmaReserva']); // Atualizar as reservas para confirmadas
+    Route::put('/reserva/confirmada', [ReservasController::class, 'confirmaReservas']); // Atualizar as reservas para confirmadas
 
 
     //Historico de Reservas

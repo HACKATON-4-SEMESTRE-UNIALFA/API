@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\usuario;
-use App\Models\Usuario as ModelsUsuario;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
@@ -11,8 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class UsuarioController extends Controller
 {
-
-
     /**
      * Verifica se o email passado na request existe no banco
      * apos verificado compara a password do banco com a password da
@@ -48,8 +45,6 @@ class UsuarioController extends Controller
             'usuario' => $usuario
         ], 200);
     }
-
-
 
     /**
      *  Buscar todos o usuários
@@ -88,7 +83,7 @@ class UsuarioController extends Controller
     }
 
     /**
-     *  Buscar todos os usuários ativos
+     *  Buscar todos os usuários inativos
      */
     public function indexDesableUser()
     {
@@ -105,16 +100,13 @@ class UsuarioController extends Controller
         ], 200);
     }
 
-
     /**
-     * Tradando dados da requsição com o Validator antes de salvar no banco de dados.
-     * Passando todos os dados da requisisao e tratando individualmente cada um dos dados,
+     * Tratando dados da requisição com o Validator antes de salvar no banco de dados.
+     * Passando todos os dados da requisição e tratando individualmente cada um dos dados,
      * além de entregar na resposta mensagens personalizadas de cada um dos possiveis erros no campo
      */
     public function store(Request $request)
     {
-        //
-
         $validador = Validator::make(
             $request->all(),
             [
@@ -185,10 +177,8 @@ class UsuarioController extends Controller
                 'confirmaSenha' => 'Confirma Senha',
                 'telefone' => 'Telefone',
                 'cpf' => 'CPF'
-            ],
-            422
+            ]
         );
-
 
         if ($validador->fails()) {
             return response()->json([
@@ -198,14 +188,13 @@ class UsuarioController extends Controller
             ], 422);
         }
 
-
         $usuario = Usuario::create([
             'nome' => $request->input('nome'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
             'telefone' => $request->input('telefone'),
             'cpf' => $request->input('cpf'),
-            'isAdmin' => $request->input('isAdmin'),
+            'isAdmin' => $request->input('isAdmin', false),
             'isUser' => true
         ]);
 
@@ -215,7 +204,6 @@ class UsuarioController extends Controller
             'usuario' => $usuario,
         ], 201);
     }
-
 
     /**
      * Filtrar usuário pelo ID
@@ -235,9 +223,8 @@ class UsuarioController extends Controller
         ], 200);
     }
 
-
     /**
-     * Edita um usuário especifico com o Validator, passando todos os dados da requisisao
+     * Edita um usuário especifico com o Validator, passando todos os dados da requisição
      * e tratando individualmente cada um dos dados, além de entregar na resposta mensagens
      * personalizadas de cada um dos possiveis erros no campo
      */
@@ -267,11 +254,11 @@ class UsuarioController extends Controller
                     }
                 ],
                 'password' => [
-                    'nullable', // Senha não é obrigatória no update, a menos que seja fornecida
+                    'nullable',
                     'string',
                     'min:7',
                     function ($attribute, $value, $fail) {
-                        if ($value) { // Só valida se a password foi fornecida
+                        if ($value) {
                             // Verifica maiúsculas
                             if (!preg_match('/[A-Z]/', $value)) {
                                 $fail("A password deve conter pelo menos uma letra maiúscula.");
@@ -304,6 +291,7 @@ class UsuarioController extends Controller
                 'confirmaSenha.same' => 'As senhas devem ser idênticas.',
                 'password.min' => 'A password deve conter no mínimo 7 caracteres.',
                 'telefone.max' => 'O telefone deve conter no máximo 15 caracteres.',
+                'nome.min' => 'O nome deve conter no minimo 8 caracteres',
             ],
             [
                 'nome' => 'Nome',
@@ -330,26 +318,44 @@ class UsuarioController extends Controller
             ], 404);
         }
 
-        // Atualize os dados do usuário
-        $usuario->update([
+        // Prepara os dados para atualização
+        $dados = [
             'nome' => $request->nome,
-            'email' => $request->email,
-            'password' => $request->password ? bcrypt($request->password) : $usuario->password,
             'telefone' => $request->telefone,
-            'isAdmin' => $request->isAdmin,
-            'isUser' => $request->isUser
-        ]);
+        ];
+
+        // Só atualiza o email se foi enviado
+        if ($request->filled('email')) {
+            $dados['email'] = $request->email;
+        }
+
+        // Só atualiza a senha se foi enviada
+        if ($request->filled('password')) {
+            $dados['password'] = bcrypt($request->password);
+        }
+
+        // Só atualiza isAdmin se foi enviado
+        if ($request->has('isAdmin')) {
+            $dados['isAdmin'] = $request->isAdmin;
+        }
+
+        // Só atualiza isUser se foi enviado
+        if ($request->has('isUser')) {
+            $dados['isUser'] = $request->isUser;
+        }
+
+        // Atualiza o usuário
+        $usuario->update($dados);
 
         return response()->json([
-            'success' => true,
+            'error' => false,
             'message' => 'Usuário atualizado com sucesso.',
             'usuario' => $usuario
         ], 200);
     }
 
-
     /**
-     * Deleta o usuário pelo id
+     * Desativa o usuário pelo id
      */
     public function desativar($id)
     {
